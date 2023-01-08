@@ -1,11 +1,15 @@
--- utf8 encoding
+-- kjvimj
+-- utf8 encodingk
 vim.g.encoding = "UTF-8"
 vim.wo.number = true
 vim.wo.cursorline = true
+-- leaderf config
+vim.g.Lf_UserCache = 0
+vim.g.Lf_UseMemoryCache = 0
 -- 显示左侧图标指示列
 vim.wo.signcolumn = "yes"
 -- 右侧参考线，超过表示代码太长了，考虑换行
-vim.wo.colorcolumn = "80"
+vim.wo.colorcolumn = "100"
 -- 缩进2个空格等于一个Tab
 vim.o.tabstop = 2
 vim.bo.tabstop = 2
@@ -33,8 +37,8 @@ vim.o.cmdheight = 2
 -- 当文件被外部程序修改时，自动加载
 vim.o.autoread = true
 vim.bo.autoread = true
--- 禁止折行
-vim.wo.wrap = false
+-- allow wrap
+vim.wo.wrap = true
 -- 光标在行首尾时<Left><Right>可以跳到下一行
 vim.o.whichwrap = '<,>,[,]'
 -- 允许隐藏被修改过的buffer

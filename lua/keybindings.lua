@@ -7,10 +7,7 @@ local map = vim.api.nvim_set_keymap
 -- 复用 opt 参数
 local opt = {noremap = true, silent = true }
 -- setting mapping variable
-local gmap = vim.keymap.set
 
-
--- close local window
 -- map("n", "<leader>q", ":q<CR>", opt)
 -- jump to head or last
 map("", "H", "^", opt)
@@ -19,7 +16,6 @@ map("", "L", "$", opt)
 -- map("n", "s", "", opt)
 
 -- windows 分屏快捷键
-map("n", "sv", ":vsp<CR>", opt)
 map("n", "<leader>v", ":vsp<CR>", opt)
 map("n", "<leader>h", ":sp<CR>", opt)
 -- 关闭当前
@@ -37,54 +33,6 @@ map("n", "∆", "<C-w>j", opt)
 map("n", "˚", "<C-w>k", opt)
 map("n", "¬", "<C-w>l", opt)
 
--- vscode config
-if vim.g.vscode then
--- Folding
-  gmap("n", "za", function() vim.fn.VSCodeNotify("editor.toggleFold") end)
-  gmap("n", "zc", function() vim.fn.VSCodeNotify("editor.foldRecursively") end)
-  gmap("n", "zC", function() vim.fn.VSCodeNotify("editor.foldAll") end)
-  gmap("n", "zO", function() vim.fn.VSCodeNotify("editor.unfoldAll") end)
-  gmap("n", "zo", function() vim.fn.VSCodeNotify("editor.unfoldRecursively") end)
-  gmap("n", "zp", function() vim.fn.VSCodeNotify("editor.gotoParentFold") end)
-
-  -- All remaps
-  gmap("", "zy", function() vim.fn.VSCodeNotify("toggleTypewriter") end)
-
-  -- Normal remaps
-  gmap("n", "[f", function() vim.fn.VSCodeNotify("workbench.view.search.focus") end)
-  gmap("n", "]f", function() vim.fn.VSCodeNotify("workbench.action.replaceInFiles") end)
-  gmap("n", "gD", function() vim.fn.VSCodeNotify("editor.action.revealDefinitionAside") end)
-  gmap("n", ";s", function() vim.fn.VSCodeNotify("editor.action.toggleStickyScroll") end)
-  gmap("n", "=<", function() vim.fn.VSCodeNotify("editor.action.trimTrailingWhitespace") end)
-  gmap("n", "gl", function() vim.fn.VSCodeNotify("editor.action.openLink") end)
-  gmap("n", "<C-k>", function()
-    vim.fn.VSCodeCall("editor.action.insertLineBefore")
-    vim.cmd("norm k")
-  end)
-  gmap("n", "<<", function() vim.fn.VSCodeNotify("editor.action.outdentLines") end)
-  gmap("n", ">>", function() vim.fn.VSCodeNotify("editor.action.indentLines") end)
-
-  -- Visual remaps
-  gmap("v", "gs", function() vim.fn.VSCodeNotifyVisual("codesnap.start", true) end)
-  gmap("v", "<", function() vim.fn.VSCodeNotifyVisual("editor.action.outdentLines", false) end)
-  gmap("v", ">", function() vim.fn.VSCodeNotifyVisual("editor.action.indentLines", false) end)
-
-  -- Insert remaps
-  gmap("i", "<C-k>", function() vim.fn.VSCodeNotify("editor.action.insertLineBefore") end)
-  -- Move editor
-  gmap("n", ";h", function() vim.fn.VSCodeNotify("workbench.action.moveEditorToPreviousGroup") end)
-  gmap("n", ";l", function() vim.fn.VSCodeNotify("workbench.action.moveEditorToNextGroup") end)
-
---vim.api.nvim_set_keymap("n", "<leader>q", "<Cmd>call", {"VSCodeNotifyVisual('workbench.action.showCommands', 1)<CR>"})
--- vim.cmd([[noremap sv :vsp<CR>]])
---gmap("n", "za", function() vim.fn.VSCodeNotify("editor.toggleFold") end)
-gmap("n", ";q", function() vim.fn.VSCodeNotify("workbench.action.closeActiveEditor") end)
--- gmap("n", "E", "gT")
-gmap("n", ";v", function() vim.fn.VSCodeNotify("workbench.action.splitEditor") end)
-  gmap("n", ";b", function() vim.fn.VSCodeCall("workbench.action.toggleSidebarVisibility", true) end)
-  gmap("n", ";e", function() vim.fn.VSCodeCall("workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", true) end)
-  gmap("n", ";r", function() vim.fn.VSCodeCall("workbench.action.openNextRecentlyUsedEditorInGroup", true) end)
-end
 -- 上下滚动浏览
 map("n", "<C-j>", "4j", opt)
 map("n", "<C-k>", "4k", opt)
@@ -95,15 +43,15 @@ map("n", "<C-d>", "9j", opt)
 -- 左右比例控制
 map("n", "<C-Left>", ":vertical resize -2<CR>", opt)
 map("n", "<C-Right>", ":vertical resize +2<CR>", opt)
-map("n", "s,", ":vertical resize -20<CR>", opt)
-map("n", "s.", ":vertical resize +20<CR>", opt)
+map("n", "<leader>,", ":vertical resize -20<CR>", opt)
+map("n", "<leader>.", ":vertical resize +20<CR>", opt)
 -- 上下比例
-map("n", "sj", ":resize +10<CR>", opt)
-map("n", "sk", ":resize -10<CR>", opt)
+map("n", "<leader>j", ":resize +10<CR>", opt)
+map("n", "<leader>k", ":resize -10<CR>", opt)
 map("n", "<C-Down>", ":resize +2<CR>", opt)
 map("n", "<C-Up>", ":resize -2<CR>", opt)
 -- 等比例
-map("n", "s=", "<C-w>=", opt)
+map("n", "<leader>=", "<C-w>=", opt)
 -- 退出快捷键
 map("i", "jk", "<ESC>", opt)
 
@@ -211,11 +159,31 @@ pluginKeys.cmp = function(cmp)
     }
 end
 
--- visual multi cursor
--- map("n", "mn", "<C-n>", opt)
--- let g:VM_leader = ';'
--- let g:VM_maps = {}
--- let g:VM_maps['Find Under'] = '<leader>n'
+-- lsp 回调函数快捷键设置
+pluginKeys.mapLSP = function(mapbuf)
+  -- rename
+  mapbuf("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opt)
+  -- code action
+  mapbuf("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opt)
+  -- go xx
+  mapbuf("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opt)
+  mapbuf("n", "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", opt)
+  mapbuf("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opt)
+  mapbuf("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opt)
+  mapbuf("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opt)
+  -- diagnostic
+  mapbuf("n", "gp", "<cmd>lua vim.diagnostic.open_float()<CR>", opt)
+  mapbuf("n", "gk", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opt)
+  mapbuf("n", "gj", "<cmd>lua vim.diagnostic.goto_next()<CR>", opt)
+  mapbuf("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opt)
+  -- 没用到
+  -- mapbuf('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opt)
+  -- mapbuf("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opt)
+  -- mapbuf('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opt)
+  -- mapbuf('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opt)
+  -- mapbuf('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opt)
+  -- mapbuf('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opt)
+end
 
 return pluginKeys
 

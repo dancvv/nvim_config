@@ -6,11 +6,12 @@ packer.startup({
     -- plugins list
 
     if vim.g.vscode then
-
     --------------------- vscode --------------------
       use{"mg979/vim-visual-multi", cond = function() return not vim.g.vscode end}
       use({ "kylechui/nvim-surround", tag = "*" })
       use("folke/tokyonight.nvim")
+      use("ggandor/leap.nvim")
+
     else
     --------------------- ordinary neovim --------------------
       use("folke/tokyonight.nvim")
@@ -32,10 +33,10 @@ packer.startup({
             }
           end,
         })
-      use "LinArcX/telescope-env.nvim"
-      use("glepnir/dashboard-nvim")
+      use { "LinArcX/telescope-env.nvim" }
+
       use { "Yggdroot/LeaderF", cmd = "Leaderf", run = ":LeaderfInstallCExtension" }
-      use{"mg979/vim-visual-multi", cond = function() return not vim.g.vscode end}
+      use {"mg979/vim-visual-multi"}
       -- 补全引擎
       use("hrsh7th/nvim-cmp")
       -- snippet 引擎
@@ -53,8 +54,13 @@ packer.startup({
       use("bkad/CamelCaseMotion")
       use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
       use({ "kylechui/nvim-surround", tag = "*" })
+      -- moving arround cursor
+      use("ggandor/leap.nvim")
+      --------------------- LSP --------------------
+      use("williamboman/nvim-lsp-installer")
+      -- Lspconfig
+      use({ "neovim/nvim-lspconfig" })
     end
-      
 
 
   end,
@@ -69,9 +75,9 @@ packer.startup({
 
 
 -- automaticall run packer sync command
---vim.cmd([[
---  augroup packer_user_config
---    autocmd!
---    autocmd BufWritePost plugins.lua source <afile> | PackerSync
---  augroup end
---]])
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+  augroup end
+]])

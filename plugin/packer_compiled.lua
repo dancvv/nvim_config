@@ -123,15 +123,15 @@ _G.packer_plugins = {
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
     url = "git@github.com:hrsh7th/cmp-vsnip"
   },
-  ["dashboard-nvim"] = {
-    loaded = true,
-    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/dashboard-nvim",
-    url = "git@github.com:glepnir/dashboard-nvim"
-  },
   ["friendly-snippets"] = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/friendly-snippets",
     url = "git@github.com:rafamadriz/friendly-snippets"
+  },
+  ["leap.nvim"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/leap.nvim",
+    url = "git@github.com:ggandor/leap.nvim"
   },
   ["lualine-lsp-progress"] = {
     loaded = true,
@@ -153,6 +153,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "git@github.com:hrsh7th/nvim-cmp"
+  },
+  ["nvim-lsp-installer"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-lsp-installer",
+    url = "git@github.com:williamboman/nvim-lsp-installer"
+  },
+  ["nvim-lspconfig"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
+    url = "git@github.com:neovim/nvim-lspconfig"
   },
   ["nvim-surround"] = {
     loaded = true,
@@ -210,11 +220,8 @@ _G.packer_plugins = {
     url = "git@github.com:moll/vim-bbye"
   },
   ["vim-visual-multi"] = {
-    cond = { "\27LJ\2\n(\0\0\1\0\3\0\0056\0\0\0009\0\1\0009\0\2\0\19\0\0\0L\0\2\0\vvscode\6g\bvim\0" },
-    loaded = false,
-    needs_bufread = false,
-    only_cond = true,
-    path = "/Users/weivang/.local/share/nvim/site/pack/packer/opt/vim-visual-multi",
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/vim-visual-multi",
     url = "git@github.com:mg979/vim-visual-multi"
   },
   ["vim-vsnip"] = {
@@ -225,18 +232,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nvim-autopairs
-time([[Config for nvim-autopairs]], true)
-try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
-time([[Config for nvim-autopairs]], false)
 -- Config for: auto-save.nvim
 time([[Config for auto-save.nvim]], true)
 try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14auto-save\frequire\0", "config", "auto-save.nvim")
 time([[Config for auto-save.nvim]], false)
--- Conditional loads
-time([[Conditional loading of vim-visual-multi]], true)
-  require("packer.load")({"vim-visual-multi"}, {}, _G.packer_plugins)
-time([[Conditional loading of vim-visual-multi]], false)
+-- Config for: nvim-autopairs
+time([[Config for nvim-autopairs]], true)
+try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
+time([[Config for nvim-autopairs]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
@@ -244,7 +247,7 @@ pcall(vim.api.nvim_create_user_command, 'Leaderf', function(cmdargs)
           require('packer.load')({'LeaderF'}, { cmd = 'Leaderf', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
         end,
         {nargs = '*', range = true, bang = true, complete = function()
-          require('packer.load')({'LeaderF'}, { cmd = 'Leaderf' }, _G.packer_plugins)
+          require('packer.load')({'LeaderF'}, {}, _G.packer_plugins)
           return vim.fn.getcompletion('Leaderf ', 'cmdline')
       end})
 time([[Defining lazy-load commands]], false)

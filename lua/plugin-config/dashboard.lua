@@ -4,11 +4,6 @@ if not status then
   return
 end
 
-  -- macos
---  db.preview_command = 'cat | lolcat -F 0.3'
-  -- linux
-  -- db.preview_command = 'ueberzug'
-  --
 db.custom_header = {
     [[⣿⠟⣽⣿⣿⣿⣿⣿⢣⠟⠋⡜⠄⢸⣿⣿⡟⣬⢁⠠⠁⣤⠄⢰⠄⠇⢻⢸]],
     [[⢏⣾⣿⣿⣿⠿⣟⢁⡴⡀⡜⣠⣶⢸⣿⣿⢃⡇⠂⢁⣶⣦⣅⠈⠇⠄⢸⢸]],

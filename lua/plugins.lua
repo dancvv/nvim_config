@@ -57,7 +57,9 @@ packer.startup({
       -- moving arround cursor
       use("ggandor/leap.nvim")
       --------------------- LSP --------------------
-      use("williamboman/nvim-lsp-installer")
+      -- use("williamboman/nvim-lsp-installer")
+      use { "williamboman/mason.nvim" }
+      use { "williamboman/mason-lspconfig.nvim" }
       -- Lspconfig
       use({ "neovim/nvim-lspconfig" })
     end

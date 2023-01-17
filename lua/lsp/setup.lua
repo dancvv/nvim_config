@@ -1,40 +1,56 @@
-local lsp_installer = require("nvim-lsp-installer")
-
--- 安装列表
--- { key: 语言 value: 配置文件 }
--- key 必须为官方支持的源
-local servers = {
-  sumneko_lua = require("lsp.config.lua"), -- lua/lsp/config/lua.lua
-}
--- 自动安装 Language Servers
-for name, _ in pairs(servers) do
-  local server_is_found, server = lsp_installer.get_server(name)
-  if server_is_found then
-    if not server:is_installed() then
-      print("Installing " .. name)
-      server:install()
-    end
-  end
+local status, mason = pcall(require, "mason")
+if not status then
+  vim.notify( "Not found mason plugin" )
+  return
 end
 
-lsp_installer.on_server_ready(function(server)
-    local config = servers[server.name]
-    if config == nil then
-        return
-    end
-    if config.on_setup then
-        config.on_setup(server)
-    else
-        server:setup({})
-    end
-end)
+local status, mason_config = pcall(require, "mason_config")
+if not status then
+  vim.notify( "Not found mason_config plugin" )
+  return
+end
 
-local function lsp_highlight_document(client)
-  -- if client.server_capabilities.document_highlight then
-    local status_ok, illuminate = pcall(require, "illuminate")
-    if not status_ok then
-      return
-    end
-    illuminate.on_attach(client)
-  -- end
+local status, lspconfig = pcall(require, "lspconfig")
+if not status then
+  vim.notify( "Not found lspconfig plugin" )
+  return
+end
+
+mason.setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
+})
+
+mason_config.setup {
+    ensure_installed = { "sumneko_lua", "rust_analyzer" },
+}
+
+-- install list
+local servers = {
+  sumneko_lua = require("lsp.config.lua")
+}
+
+--for name, config in pairs(servers) do
+--  if config ~= nil and type(config) == "table" then
+--    -- auto config on_setup method
+--    config.on_setup(lspconfig[name])
+--  else
+--    -- use default args
+--    lspconfig[name].setup({})
+--  end
+--end
+
+for name, config in pairs(servers) do
+  if config ~= nil and type(config) == "table" then
+    -- 自定义初始化配置文件必须实现on_setup 方法
+    config.on_setup(lspconfig[name])
+  else
+    -- 使用默认参数
+    lspconfig[name].setup({})
+  end
 end

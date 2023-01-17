@@ -17,4 +17,5 @@ else
   require('lsp.ui')
   require('lsp.cmp')
   require('lsp.setup')
+  require('plugin-config.treesitter')
 end

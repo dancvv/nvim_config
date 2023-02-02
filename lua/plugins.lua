@@ -71,6 +71,7 @@ packer.startup({
         end,
         requires = {'nvim-tree/nvim-web-devicons'}
       }
+      use({ "jose-elias-alvarez/null-ls.nvim", requires = "nvim-lua/plenary.nvim" })
     end
 
 
@@ -86,10 +87,10 @@ packer.startup({
 
 
 -- automaticall run packer sync command
---vim.cmd([[
---  augroup packer_user_config
---    autocmd!
---    autocmd BufWritePost plugins.lua source <afile> | PackerSync
---
---  augroup end
---]])
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+
+  augroup end
+]])

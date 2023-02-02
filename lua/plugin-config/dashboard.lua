@@ -27,27 +27,45 @@ local db = function()
       }, --your header
       center = {
         {
-          icon = ' ',
-          icon_hl = 'Title',
-          desc = 'Find File           ',
-          desc_hl = 'String',
-          key = 'b',
-          keymap = 'SPC f f',
-          key_hl = 'Number',
-          action = 'lua print(2)'
+          icon = "  ",
+          desc = "Find  File                              ",
+          action = "Leaderf file --popup",
+          shortcut = "<Leader> f f",
         },
         {
-          icon = ' ',
-          desc = 'Find Dotfiles',
-          key = 'f',
-          keymap = 'SPC f d',
-          action = 'lua print(3)'
+          icon = "  ",
+          desc = "Recently opened files                   ",
+          action = "Leaderf mru --popup",
+          shortcut = "<Leader> f r",
+        },
+        {
+          icon = "  ",
+          desc = "Project grep                            ",
+          action = "Leaderf rg --popup",
+          shortcut = "<Leader> f g",
+        },
+        {
+          icon = "  ",
+          desc = "Open Nvim config                        ",
+          action = "tabnew $MYVIMRC | tcd %:p:h",
+          shortcut = "<Leader> e v",
+        },
+        {
+          icon = "  ",
+          desc = "New file                                ",
+          action = "enew",
+          shortcut = "e           ",
+        },
+        {
+          icon = "  ",
+          desc = "Quit Nvim                               ",
+          -- desc = "Quit Nvim                               ",
+          action = "qa",
+          shortcut = "q           ",
         },
       },
       footer = {
-        "",
-        "",
-        "",
+        "Life shouldn’t be a lifetime of waiting. from Cixin liu",
       },  --your footer
       packages = { enable = true },
     }

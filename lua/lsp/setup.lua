@@ -4,9 +4,9 @@ if not status then
   return
 end
 
-local status, mason_config = pcall(require, "mason_config")
+local status, mason_lspconfig = pcall(require, "mason-lspconfig")
 if not status then
-  vim.notify( "Not found mason_config plugin" )
+  vim.notify( "Not found mason-lspconfig plugin" )
   return
 end
 
@@ -26,24 +26,14 @@ mason.setup({
     }
 })
 
-mason_config.setup {
-    ensure_installed = { "sumneko_lua", "rust_analyzer" },
+mason_lspconfig.setup {
+    ensure_installed = { "sumneko_lua" },
 }
 
 -- install list
 local servers = {
-  sumneko_lua = require("lsp.config.lua")
+  sumneko_lua = require("lsp.config.lua"),
 }
-
---for name, config in pairs(servers) do
---  if config ~= nil and type(config) == "table" then
---    -- auto config on_setup method
---    config.on_setup(lspconfig[name])
---  else
---    -- use default args
---    lspconfig[name].setup({})
---  end
---end
 
 for name, config in pairs(servers) do
   if config ~= nil and type(config) == "table" then
@@ -54,3 +44,6 @@ for name, config in pairs(servers) do
     lspconfig[name].setup({})
   end
 end
+
+-- introduce ui config
+require('lsp.ui')

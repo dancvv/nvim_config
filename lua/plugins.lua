@@ -61,7 +61,16 @@ packer.startup({
       use { "williamboman/mason.nvim" }
       use { "williamboman/mason-lspconfig.nvim" }
       -- Lspconfig
-      use({ "neovim/nvim-lspconfig" })
+      use("neovim/nvim-lspconfig")
+      use {
+        'glepnir/dashboard-nvim',
+        event = 'VimEnter',
+        config = function()
+          local db = require("plugin-config.dashboard")
+          db()
+        end,
+        requires = {'nvim-tree/nvim-web-devicons'}
+      }
     end
 
 
@@ -77,9 +86,10 @@ packer.startup({
 
 
 -- automaticall run packer sync command
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
+--vim.cmd([[
+--  augroup packer_user_config
+--    autocmd!
+--    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+--
+--  augroup end
+--]])

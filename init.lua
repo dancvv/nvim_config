@@ -14,8 +14,8 @@ if vim.g.vscode then
   require('vskeybindings')
 else
   require('keybindings')
-  require('lsp.ui')
   require('lsp.cmp')
   require('lsp.setup')
   require('plugin-config.treesitter')
+  --require('plugin-config.dashboard')
 end

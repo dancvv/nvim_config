@@ -79,6 +79,11 @@ _G.packer_plugins = {
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/CamelCaseMotion",
     url = "git@github.com:bkad/CamelCaseMotion"
   },
+  ["Comment.nvim"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/Comment.nvim",
+    url = "git@github.com:numToStr/Comment.nvim"
+  },
   LeaderF = {
     commands = { "Leaderf" },
     loaded = false,
@@ -160,6 +165,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "git@github.com:williamboman/mason.nvim"
+  },
+  ["null-ls.nvim"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
+    url = "git@github.com:jose-elias-alvarez/null-ls.nvim"
   },
   ["nvim-autopairs"] = {
     config = { "\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0" },
@@ -245,14 +255,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: auto-save.nvim
-time([[Config for auto-save.nvim]], true)
-try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14auto-save\frequire\0", "config", "auto-save.nvim")
-time([[Config for auto-save.nvim]], false)
 -- Config for: nvim-autopairs
 time([[Config for nvim-autopairs]], true)
 try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
 time([[Config for nvim-autopairs]], false)
+-- Config for: auto-save.nvim
+time([[Config for auto-save.nvim]], true)
+try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14auto-save\frequire\0", "config", "auto-save.nvim")
+time([[Config for auto-save.nvim]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)

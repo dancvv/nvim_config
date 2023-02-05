@@ -5,6 +5,7 @@ require('colorscheme')
 require('plugin-config.multi-cursor')
 require('plugin-config.surround')
 require('plugin-config.leap')
+require('plugin-config.comment')
 
 if vim.g.vscode then
   require('vskeybindings')
@@ -19,3 +20,4 @@ else
   require('plugin-config.bufferline')
   require('plugin-config.lualine')
 end
+

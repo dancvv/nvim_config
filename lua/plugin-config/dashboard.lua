@@ -65,7 +65,8 @@ local db = function()
         },
       },
       footer = {
-        "Life shouldn’t be a lifetime of waiting. from Cixin liu",
+        "Life shouldn’t be a lifetime of waiting.",
+        "- Cixin liu",
       },  --your footer
       packages = { enable = true },
     }

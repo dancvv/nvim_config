@@ -73,6 +73,10 @@ packer.startup({
       }
       use({ "jose-elias-alvarez/null-ls.nvim", requires = "nvim-lua/plenary.nvim" })
       use('numToStr/Comment.nvim')
+      -- use('ldelossa/nvim-ide')
+      use("rcarriga/nvim-notify")
+      use("akinsho/toggleterm.nvim")
+      use("lewis6991/gitsigns.nvim")
     end
 
 

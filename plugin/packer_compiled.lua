@@ -141,6 +141,11 @@ _G.packer_plugins = {
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/friendly-snippets",
     url = "git@github.com:rafamadriz/friendly-snippets"
   },
+  ["gitsigns.nvim"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
+    url = "git@github.com:lewis6991/gitsigns.nvim"
+  },
   ["leap.nvim"] = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/leap.nvim",
@@ -187,6 +192,11 @@ _G.packer_plugins = {
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "git@github.com:neovim/nvim-lspconfig"
   },
+  ["nvim-notify"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-notify",
+    url = "git@github.com:rcarriga/nvim-notify"
+  },
   ["nvim-surround"] = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/nvim-surround",
@@ -227,6 +237,11 @@ _G.packer_plugins = {
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "git@github.com:nvim-telescope/telescope.nvim"
   },
+  ["toggleterm.nvim"] = {
+    loaded = true,
+    path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/toggleterm.nvim",
+    url = "git@github.com:akinsho/toggleterm.nvim"
+  },
   ["tokyonight.nvim"] = {
     loaded = true,
     path = "/Users/weivang/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
@@ -255,14 +270,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nvim-autopairs
-time([[Config for nvim-autopairs]], true)
-try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
-time([[Config for nvim-autopairs]], false)
 -- Config for: auto-save.nvim
 time([[Config for auto-save.nvim]], true)
 try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14auto-save\frequire\0", "config", "auto-save.nvim")
 time([[Config for auto-save.nvim]], false)
+-- Config for: nvim-autopairs
+time([[Config for nvim-autopairs]], true)
+try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
+time([[Config for nvim-autopairs]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)

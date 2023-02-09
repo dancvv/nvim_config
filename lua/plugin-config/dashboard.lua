@@ -41,14 +41,34 @@ local db = function()
           action = 'Telescope find_files'
         },
         {
-          icon = ' ',
-          icon_hl = 'group',
-          desc = 'Find Dotfiles',
-          desc_hl = 'group',
-          key = 'f',
-          keymap = 'SPC f d',
-          action = 'lua print(3)'
+          icon = ' ',
+          desc = 'File History           ',
+          key = 'h',
+          keymap = 'SPC f e',
+          action = 'Telescope oldfiles'
         },
+        {
+          icon = ' ',
+          desc = 'Project Find',
+          key = 'f',
+          keymap = 'SPC f p',
+          action = 'Telescope projects'
+        },
+        {
+          icon = ' ',
+          desc = 'File New',
+          key = 'n',
+          keymap = 'SPC f d',
+          action = 'enew'
+        },
+        {
+          icon = ' ',
+          desc = 'Word Find',
+          key = 'l',
+          keymap = 'SPC f w',
+          action = 'Telescope live_grep'
+        }
+
       },
       footer = {
         "Life shouldn’t be a lifetime of waiting.",

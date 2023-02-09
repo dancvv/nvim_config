@@ -26,6 +26,8 @@ packer.startup({
       -- or                            , branch = '0.1.x',
         requires = { {'nvim-lua/plenary.nvim'} }
       }
+      use { "nvim-telescope/telescope-file-browser.nvim" }
+      use("nvim-telescope/telescope-project.nvim")
       use({"Pocco81/auto-save.nvim",config = function()
         require("auto-save").setup {
             -- your config goes here
@@ -77,9 +79,8 @@ packer.startup({
       use("rcarriga/nvim-notify")
       use("akinsho/toggleterm.nvim")
       use("lewis6991/gitsigns.nvim")
+      use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
     end
-
-
   end,
   -- git proxy through ssh, need to config the ssh key
   config = {
@@ -89,7 +90,6 @@ packer.startup({
     }
   }
 })
-
 
 -- automaticall run packer sync command
 vim.cmd([[

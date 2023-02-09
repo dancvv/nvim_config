@@ -95,6 +95,10 @@ pluginKeys.nvimTreeList = {
 map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 -- 全局搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
+-- telescope file_browser open file window
+map("n", "<space>fb", ":Telescope file_browser<CR>", {noremap = true})
+-- telescope project switch projects
+map("n", "<C-S-p>", ":lua require'telescope'.extensions.project.project{}<CR>", opt)
 -- Telescope 列表中 插入模式快捷键
 pluginKeys.telescopeList = {
   i = {

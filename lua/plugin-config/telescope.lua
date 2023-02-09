@@ -4,6 +4,27 @@ if not status then
   return
 end
 
+-- load file_browser extension
+local fb_status, _  = pcall(require, "file_browser")
+if not fb_status then
+  vim.notify("Load extension telescope file_browser failed")
+  return
+end
+
+-- load projects extension
+local pj_status, _ = pcall(require, "project")
+if not pj_status then
+  vim.notify("Load extension project failed")
+  return
+end
+
+-- load env extension
+local env_status, _ = pcall(telescope.load_extension, "env")
+if not env_status then
+  vim.notify("Load extension env failed")
+  return
+end
+
 telescope.setup({
   defaults = {
     -- 打开弹窗后进入的初始模式，默认为 insert，也可以是 normal
@@ -20,8 +41,13 @@ telescope.setup({
   },
   extensions = {
      -- 扩展插件配置
+     project = {
+       hidden_files = true, -- default: false
+      theme = "dropdown",
+      order_by = "asc",
+      search_by = "title",
+      sync_with_nvim_tree = true, -- default false
+     }
   },
 })
 
--- extensions
-pcall(telescope.load_extension, "env")

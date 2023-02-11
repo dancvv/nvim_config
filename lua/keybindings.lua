@@ -62,14 +62,31 @@ map("n", "R", ":BufferLineCycleNext<CR>", opt)
 -- close buffer
 map("n", "<leader>q", ":Bdelete<CR>", opt)
 
--- export the key mapping for the tree
--- -- 插件快捷键
-local pluginKeys = {}
-
 -- nvim-tree
 -- alt + m 键打开关闭tree
 map("n", "<A-m>", ":NvimTreeToggle<CR>", opt)
 map("n", "µ", ":NvimTreeToggle<CR>", opt)
+
+-- CodeRuner mapping
+map("n", "<leader>r", ":RunCode<CR>", opt)
+map("n", "<leader>rf", ":RunFile<CR>", opt)
+map("n", "<leader>rft", ":RunFile tab<CR>", opt)
+map("n", "<leader>rp", ":RunProject<CR>", opt)
+map("n", "<leader>rc", ":RunClose<CR>", opt)
+map("n", "<leader>crf", ":CRFiletype<CR>", opt)
+
+-- Trouble mapping
+map("n", "<leader>xx", ":TroubleToggle<cr>", opt)
+map("n", "<leader>xw", ":TroubleToggle workspace_diagnostics<cr>", opt)
+map("n", "<leader>xd", ":TrobleToggle document_diagnostics<cr>", opt)
+map("n", "<leader>xl", ":TroubleToggle loclist<cr>", opt)
+map("n", "<leader>xq", ":TroubleToggle quickfix<cr>", opt)
+map("n", "gR", ":TroubleToggle lsp_references<cr>", opt)
+
+-- export the key mapping for the tree
+-- -- 插件快捷键
+local pluginKeys = {}
+
 -- 列表快捷键
 pluginKeys.nvimTreeList = {
   -- 打开文件或文件夹
@@ -90,13 +107,14 @@ pluginKeys.nvimTreeList = {
   { key = "p", action = "paste" },
   { key = "s", action = "system_open" },
 }
+
 -- telescope
 -- 查找文件
 map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 -- 全局搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 -- telescope file_browser open file window
-map("n", "<space>fb", ":Telescope file_browser<CR>", {noremap = true})
+map("n", "<space>fb", ":Telescope file_browser<CR>", opt)
 -- telescope project switch projects
 map("n", "<C-S-p>", ":lua require'telescope'.extensions.project.project{}<CR>", opt)
 -- Telescope 列表中 插入模式快捷键

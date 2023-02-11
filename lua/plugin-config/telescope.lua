@@ -1,18 +1,18 @@
 local status, telescope = pcall(require, "telescope")
 if not status then
-  vim.notify("not found telescope")
+  vim.notify("Not found telescope")
   return
 end
 
 -- load file_browser extension
-local fb_status, _  = pcall(require, "file_browser")
+local fb_status, _  = pcall(telescope.load_extension, "file_browser")
 if not fb_status then
   vim.notify("Load extension telescope file_browser failed")
   return
 end
 
 -- load projects extension
-local pj_status, _ = pcall(require, "project")
+local pj_status, _ = pcall(telescope.load_extension, "project")
 if not pj_status then
   vim.notify("Load extension project failed")
   return

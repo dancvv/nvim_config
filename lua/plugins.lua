@@ -28,14 +28,11 @@ packer.startup({
       }
       use { "nvim-telescope/telescope-file-browser.nvim" }
       use("nvim-telescope/telescope-project.nvim")
+      use { "LinArcX/telescope-env.nvim" }
       use({"Pocco81/auto-save.nvim",config = function()
-        require("auto-save").setup {
-            -- your config goes here
-            -- -- or just leave it empty :)
-            }
+        require("auto-save").setup { }
           end,
         })
-      use { "LinArcX/telescope-env.nvim" }
 
       use { "Yggdroot/LeaderF", cmd = "Leaderf", run = ":LeaderfInstallCExtension" }
       use {"mg979/vim-visual-multi"}
@@ -80,6 +77,9 @@ packer.startup({
       use("akinsho/toggleterm.nvim")
       use("lewis6991/gitsigns.nvim")
       use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
+      use("github/copilot.vim")
+      use { 'CRAG666/code_runner.nvim', requires = 'nvim-lua/plenary.nvim' }
+      use { "folke/trouble.nvim", requires = "nvim-tree/nvim-web-devicons" }
     end
   end,
   -- git proxy through ssh, need to config the ssh key

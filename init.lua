@@ -14,7 +14,7 @@ else
   require('lsp.cmp')
   require('lsp.setup')
   require('lsp.null-ls')
-  require('plugin-config.ide')
+  -- require('plugin-config.ide')
   require('plugin-config.treesitter')
   require('plugin-config.telescope')
   require('plugin-config.nvim-tree')
@@ -22,5 +22,6 @@ else
   require('plugin-config.lualine')
   require('plugin-config.toggleterm')
   require('plugin-config.gitsigns')
+  require('plugin-config.code-runner')
 end
 

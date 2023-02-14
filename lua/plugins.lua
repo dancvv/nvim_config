@@ -80,6 +80,14 @@ packer.startup({
       use("github/copilot.vim")
       use { 'CRAG666/code_runner.nvim', requires = 'nvim-lua/plenary.nvim' }
       use { "folke/trouble.nvim", requires = "nvim-tree/nvim-web-devicons" }
+      use({
+        "folke/noice.nvim",
+        requires = {
+          "MunifTanjim/nui.nvim",
+          "rcarriga/nvim-notify",
+          }
+      })
+
     end
   end,
   -- git proxy through ssh, need to config the ssh key

@@ -117,6 +117,7 @@ map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 map("n", "<space>fb", ":Telescope file_browser<CR>", opt)
 -- telescope project switch projects
 map("n", "<C-S-p>", ":lua require'telescope'.extensions.project.project{}<CR>", opt)
+map("n", "<leader>p", ":lua require'telescope'.extensions.project.project{}<CR>", opt)
 -- Telescope 列表中 插入模式快捷键
 pluginKeys.telescopeList = {
   i = {

@@ -26,6 +26,7 @@ nvim_tree.setup({
     -- 隐藏 .文件 和 node_modules 文件夹
     filters = {
         dotfiles = false,
+        -- 隐藏工程构建目录
         custom = { 'node_modules' },
     },
     view = {

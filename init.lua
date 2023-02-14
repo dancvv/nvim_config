@@ -23,5 +23,6 @@ else
   require('plugin-config.toggleterm')
   require('plugin-config.gitsigns')
   require('plugin-config.code-runner')
+  require('plugin-config.noice')
 end
 

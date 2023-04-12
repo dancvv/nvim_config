@@ -1,6 +1,9 @@
 vim.g.mapleader = ";"
 local gmap = vim.keymap.set
+local opt = {noremap = true, silent = true }
 -- vscode config
+gmap("", "H", "^", opt)
+gmap("", "L", "$", opt)
 -- Folding
 gmap("n", "za", function() vim.fn.VSCodeNotify("editor.toggleFold") end)
 gmap("n", "zc", function() vim.fn.VSCodeNotify("editor.foldRecursively") end)

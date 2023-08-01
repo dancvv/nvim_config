@@ -3,3 +3,5 @@
 require("config.keymaps")
 require("config.lazy")
 
+print("12")
+

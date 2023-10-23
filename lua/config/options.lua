@@ -1,3 +1,7 @@
+local opt = vim.opt
+opt.number = true
+vim.wo.number = true
+
 -- utf8 encoding
 vim.g.encoding = "UTF-8"
 
@@ -26,5 +30,3 @@ vim.o.autoindent = true
 vim.bo.autoindent = true
 vim.o.smartindent = true
 
-local opt = vim.opt
-opt.number = true

@@ -61,3 +61,7 @@ map("n", "E", ":BufferLineCyclePrev<CR>", opt)
 map("n", "R", ":BufferLineCycleNext<CR>", opt)
 -- close buffer
 map("n", "<leader>q", ":Bdelete<CR>", opt)
+
+-- nvim tree
+map("n", "<A-m>", ":NvimTreeToggle<CR>", opt)
+map("n", "µ", ":NvimTreeToggle<CR>", opt)

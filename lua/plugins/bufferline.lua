@@ -1,6 +1,7 @@
 local M = {
 	'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons',
-	options = {
+	opts = {
+		options = {
     -- 关闭 Tab 的命令，这里使用 moll/vim-bbye 的 :Bdelete 命令
     close_command = "Bdelete! %d",
     right_mouse_command = "Bdelete! %d",
@@ -27,8 +28,7 @@ local M = {
       return s
     end,
   },
-
-
+  },
 }
 
 return M

@@ -7,6 +7,8 @@ local M = {
     ensure_installed = {
       "stylua",
       "shfmt",
+      "java-test",
+      "java-debug-adapter"
       -- "flake8",
     },
   },

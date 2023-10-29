@@ -1,4 +1,4 @@
- -- codeium cmp source
+-- codeium cmp source
 local M = {
   "nvim-cmp",
   dependencies = {
@@ -18,6 +18,6 @@ local M = {
       priority = 100,
     })
   end,
-},
+}
 
 return M

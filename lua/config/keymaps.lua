@@ -59,8 +59,11 @@ map("i", "jk", "<ESC>", opt)
 -- 左右Tab切换
 map("n", "E", ":BufferLineCyclePrev<CR>", opt)
 map("n", "R", ":BufferLineCycleNext<CR>", opt)
+map("n", "<leader>bp", ":BufferLineTogglePin<CR>", opt)
+map("n", "<leader>bo", ":BufferLineCloseOthers<CR>", opt)
 -- close buffer
-map("n", "<leader>q", ":Bdelete<CR>", opt)
+-- map("n", "<leader>q", ":Bdelete<CR>", opt)
+-- map("n", "<leader>q", "bdelete! %d", opt)
 
 -- nvim tree
 map("n", "<A-m>", ":NvimTreeToggle<CR>", opt)

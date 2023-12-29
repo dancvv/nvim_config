@@ -1,4 +1,5 @@
 local M = {
+  {
   -- lazy.nvim
   "folke/noice.nvim",
   event = "VeryLazy",
@@ -21,6 +22,10 @@ local M = {
     --   If not available, we use `mini` as the fallback
     "rcarriga/nvim-notify",
     }
+},{
+    "Pocco81/auto-save.nvim",
+    event = "VeryLazy"
+  }
 }
 
 return M

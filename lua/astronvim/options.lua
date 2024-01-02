@@ -20,7 +20,7 @@ local options = astronvim.user_opts("options", {
     foldlevelstart = 99, -- start with all code unfolded
     foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil, -- show foldcolumn in nvim 0.9
     history = 100, -- number of commands to remember in a history table
-    ignorecase = true, -- case insensitive searching
+    ignorecase = false, -- case insensitive searching
     infercase = true, -- infer cases in keyword completion
     laststatus = 3, -- global statusline
     linebreak = true, -- wrap lines at 'breakat'

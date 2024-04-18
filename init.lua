@@ -1,10 +1,13 @@
--- require lazy config
-require("config.keymaps")
-require("config.lazy")
-require("config.options")
+--   _       _ _     _
+--  (_)_ __ (_) |_  | |_   _  __ _
+--  | | '_ \| | __| | | | | |/ _` |
+--  | | | | | | |_ _| | |_| | (_| |
+--  |_|_| |_|_|\__(_)_|\__,_|\__,_|
 
--- vscode envirment
+require('core')
+require('lsp')
+
+-- VSCode only settings
 if vim.g.vscode then
-  require('config.vskeymaps')
+  require('vscode')
 end
-

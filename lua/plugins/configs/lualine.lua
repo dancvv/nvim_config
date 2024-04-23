@@ -5,20 +5,21 @@ if not success then
 end
 
 local utils = require('ui.utils')
+local icons = require('ui.icons')
 
 local config = {
   options = {
     icons_enabled = true,
-    theme = 'dracula',
+    theme = 'auto',
     component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
+    section_separators = { left = '▓▒░', right = ''},
     disabled_filetypes = {
       statusline = {},
       winbar = {},
     },
     ignore_focus = {},
     always_divide_middle = true,
-    globalstatus = false,
+    globalstatus = true,
     refresh = {
       statusline = 1000,
       tabline = 1000,
@@ -27,7 +28,7 @@ local config = {
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_b = {'branch', 'diagnostics'},
     lualine_c = {'filename'},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
@@ -45,7 +46,6 @@ local config = {
   winbar = {},
   inactive_winbar = {},
   extensions = {}
-
 }
 
 

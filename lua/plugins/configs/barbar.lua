@@ -5,17 +5,21 @@ if not success then
 end
 
 barbar.setup({
-  animation = false,
+  animation = true,
+  tabpages = true,
   icons = {
     button = false,
     separator = { left = '' },
     inactive = {
       separator = { left = '' },
     },
-    modified = { button = false },
+    modified = {button = '●'},
     pinned = { button = '車', filename = true },
+    inactive = {button = '×'},
+
   },
   sidebar_filetypes = {
     NvimTree = true,
   },
+  no_name_title = 'New File',
 })

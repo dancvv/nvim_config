@@ -22,13 +22,21 @@ return {
         javascriptreact = { { 'prettierd', 'prettier' } },
         css = { { 'prettierd', 'prettier' } },
         scss = { { 'prettierd', 'prettier' } },
+        go = { "goimports", "gofmt" },
+        html = { "prettier" },
+        java = { "google-java-format" , "astyle" },
       },
     },
+    format_on_save = {
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 500,
+      },
     keys = {
       {
-        "<leader>'f",
+        "<leader>mp",
         function()
-          require('conform').format({ lsp_fallback = true })
+          require('conform').format({ lsp_fallback = true , async = false, timeout_ms = 500 })
         end,
         mode = 'n',
       },

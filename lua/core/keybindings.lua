@@ -80,5 +80,8 @@ if not vim.g.vscode then
   bind("n", "<C-n>", ":NvimTreeToggle<CR>", opt)
   bind("n", "<leader>e", ":NvimTreeFocus<CR>", opt)
 
+  -- treesitter
+  bind("n", "<leader>i", "gg=G", opt)
+
 
 end

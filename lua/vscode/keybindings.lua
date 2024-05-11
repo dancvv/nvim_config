@@ -10,14 +10,19 @@ bind('n', '<LEADER>ff', '<CMD>call VSCodeNotify("workbench.action.quickOpen")<CR
 bind('n', '<LEADER>fw', '<CMD>call VSCodeNotify("workbench.action.findInFiles")<CR>', opt)
 
 -- Navigation
-bind('n', '<C-j>', '<CMD>call VSCodeNotify("workbench.action.navigateDown")<CR>', opt)
-bind('x', '<C-j>', '<CMD>call VSCodeNotify("workbench.action.navigateDown")<CR>', opt)
+-- bind('n', '<C-j>', '<CMD>call VSCodeNotify("workbench.action.navigateDown")<CR>', opt)
+-- bind('x', '<C-j>', '<CMD>call VSCodeNotify("workbench.action.navigateDown")<CR>', opt)
 bind('n', '<C-k>', '<CMD>call VSCodeNotify("workbench.action.navigateUp")<CR>', opt)
 bind('x', '<C-k>', '<CMD>call VSCodeNotify("workbench.action.navigateUp")<CR>', opt)
 bind('n', '<C-h>', '<CMD>call VSCodeNotify("workbench.action.navigateLeft")<CR>', opt)
 bind('x', '<C-h>', '<CMD>call VSCodeNotify("workbench.action.navigateLeft")<CR>', opt)
 bind('n', '<C-l>', '<CMD>call VSCodeNotify("workbench.action.navigateRight")<CR>', opt)
 bind('x', '<C-l>', '<CMD>call VSCodeNotify("workbench.action.navigateRight")<CR>', opt)
+
+
+-- Move down and up 5 lines
+bind('n', '<C-j>', '5j', opt)
+bind('n', '<C-k>', '5k', opt)
 
 -- Active editor
 bind('n', '<S-w>', '<CMD>call VSCodeNotify("workbench.action.closeActiveEditor")<CR>', opt)

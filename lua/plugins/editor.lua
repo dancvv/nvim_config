@@ -15,28 +15,30 @@ return {
     dependencies = { 'mason.nvim' },
     lazy = true,
     cmd = 'ConformInfo',
+
     opts = {
       formatters_by_ft = {
         lua = { 'stylua' },
-        javascript = { { 'prettierd', 'prettier' } },
-        javascriptreact = { { 'prettierd', 'prettier' } },
+        javascript = { 'prettierd', 'prettier' },
+        typescript = { 'prettierd', 'prettier' },
+        javascriptreact = { 'prettierd', 'prettier' },
         css = { { 'prettierd', 'prettier' } },
         scss = { { 'prettierd', 'prettier' } },
-        go = { "goimports", "gofmt" },
-        html = { "prettier" },
-        java = { "google-java-format" , "astyle" },
+        go = { 'goimports', 'gofmt' },
+        html = { 'prettier' },
+        java = { 'google-java-format', 'astyle' },
       },
     },
     format_on_save = {
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 500,
-      },
+      lsp_fallback = true,
+      async = false,
+      timeout_ms = 500,
+    },
     keys = {
       {
-        "<leader>mp",
+        '<leader>mp',
         function()
-          require('conform').format({ lsp_fallback = true , async = false, timeout_ms = 500 })
+          require('conform').format({ lsp_fallback = true, async = false, timeout_ms = 500 })
         end,
         mode = 'n',
       },

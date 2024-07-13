@@ -22,7 +22,9 @@ bind('i', 'ξκ', '<ESC>', opt)
 -- Jump to the beginning of the line
 -- Jump to the end of the line
 bind('n', 'H', '^', opt)
+bind('v', 'H', '^', opt)
 bind('n', 'L', '$', opt)
+bind('v', 'L', '$', opt)
 
 -- Move down and up 5 lines
 bind('n', '<C-j>', '5j', opt)

@@ -29,6 +29,8 @@ bind('v', 'L', '$', opt)
 -- Move down and up 5 lines
 bind('n', '<C-j>', '5j', opt)
 bind('n', '<C-k>', '5k', opt)
+bind('v', '<C-j>', '5j', opt)
+bind('v', '<C-k>', '5k', opt)
 
 -- Stay in indent mode after indenting text
 bind('v', '<', '<gv', opt)

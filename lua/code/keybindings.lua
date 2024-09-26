@@ -23,6 +23,8 @@ bind('x', '<C-l>', '<CMD>call VSCodeNotify("workbench.action.navigateRight")<CR>
 -- Move down and up 5 lines
 bind('n', '<C-j>', '5j', opt)
 bind('n', '<C-k>', '5k', opt)
+bind('v', '<C-j>', '5j', opt)
+bind('v', '<C-k>', '5k', opt)
 
 -- Active editor
 bind('n', '<S-w>', '<CMD>call VSCodeNotify("workbench.action.closeActiveEditor")<CR>', opt)
@@ -41,3 +43,5 @@ bind('n', '<LEADER>k', '<CMD>call VSCodeNotify("editor.action.showHover")<CR>', 
 -- VSCode definitions/references
 bind('n', 'gd', '<CMD>call VSCodeNotify("editor.action.revealDefinition")<CR>', opt)
 bind('n', 'gr', '<CMD>call VSCodeNotify("editor.action.goToReferences")<CR>', opt)
+
+

@@ -1,2 +1,24 @@
+# Neovim data and cache
+*.log
 lazy-lock.json
+
+# LSP and Mason
+.luarc.json
+.stylua.toml
+
+# OS
+.DS_Store
+Thumbs.db
 .history
+
+# Backup files
+*.backup
+*~
+*.swp
+*.swo
+
+# Session files
+Session.vim
+
+# Undo directory (handled by config)
+undo/

@@ -1,13 +1,10 @@
---   _       _ _     _
---  (_)_ __ (_) |_  | |_   _  __ _
---  | | '_ \| | __| | | | | |/ _` |
---  | | | | | | |_ _| | |_| | (_| |
---  |_|_| |_|_|\__(_)_|\__,_|\__,_|
+-- ============================================================================
+-- Neovim Configuration Entry Point
+-- Modern VSCode-like Development Experience
+-- ============================================================================
 
-require('core')
-require('lsp')
+-- Performance: Load core modules first
+require("core")
 
--- VSCode only settings
-if vim.g.vscode then
-  require('code')
-end
+-- Bootstrap plugin manager and load plugins
+require("plugins")

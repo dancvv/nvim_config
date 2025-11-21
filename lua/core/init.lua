@@ -1,10 +1,9 @@
--- Detect OS and set nvim home as global variable
-if vim.fn.has('unix') == 1 then
-  vim.g['nvim_home'] = '~/.config/nvim'
-elseif vim.fn.has('win32') == 1 then
-  vim.g['nvim_home'] = '~/AppData/Local/nvim'
-end
+-- ============================================================================
+-- Core Configuration Module
+-- Loads fundamental settings, keymaps, and autocmds
+-- ============================================================================
 
-require('core.keybindings')
-require('core.options')
-require('core.lazy')
+-- Load core modules in order
+require("core.options")   -- Vim options and settings
+require("core.keymaps")   -- Key mappings
+require("core.autocmds")  -- Auto commands

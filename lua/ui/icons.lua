@@ -9,14 +9,6 @@ local M = {}
 -- File Type Icons (used by neo-tree, telescope, etc.)
 -- ============================================================================
 M.file_icons = {
-  -- Folders
-  folder_closed = '',
-  folder_open = '',
-  folder_empty = '󰜌',
-  folder_empty_open = '󰜌',
-  folder_symlink = '',
-  folder_arrow_closed = '',
-  folder_arrow_open = '',
 
   -- Default
   default = '',
@@ -56,7 +48,7 @@ M.git_icons = {
   untracked = '┆',
 
   -- Git status (neo-tree, telescope, etc.)
-  unstaged = '󰄱',
+  -- unstaged = '󰄱',
   staged = '',
   unmerged = '',
   renamed = '➜',

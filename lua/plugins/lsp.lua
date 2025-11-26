@@ -92,6 +92,8 @@ return {
   },
 
   -- Formatting
+  -- Note: Auto-format on save is DISABLED by default
+  -- Use <leader>fm to manually format the buffer
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
@@ -123,10 +125,11 @@ return {
         markdown = { { "prettierd", "prettier" } },
         go = { "goimports", "gofumpt" },
       },
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      -- Disable format on save - use <leader>fm to format manually
+      -- format_on_save = {
+      --   timeout_ms = 500,
+      --   lsp_fallback = true,
+      -- },
     },
   },
 

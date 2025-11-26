@@ -38,6 +38,7 @@ return {
           "vim",
           "vimdoc",
           "yaml",
+          "toml",
           "go",
           "gomod",
           "gowork",

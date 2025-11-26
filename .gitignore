@@ -1,10 +1,12 @@
 # Neovim data and cache
 *.log
 lazy-lock.json
+CLAUDE.md
 
 # LSP and Mason
 .luarc.json
 .stylua.toml
+
 
 # OS
 .DS_Store

@@ -68,6 +68,15 @@ keymap('n', 'N', 'Nzzzv', opts)
 -- Editing
 -- ============================================================================
 
+-- System clipboard keybindings (platform-specific)
+
+-- Copy to system clipboard
+keymap('v', '<C-c>', '"+y', { desc = 'Copy to system clipboard' })
+keymap('n', '<C-c>', '"+yy', { desc = 'Copy line to system clipboard' })
+
+-- Cut to system clipboard
+keymap('v', '<C-x>', '"+d', { desc = 'Cut to system clipboard' })
+
 -- Better indenting
 keymap('v', '<', '<gv', opts)
 keymap('v', '>', '>gv', opts)
@@ -102,9 +111,10 @@ keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', opts)
 -- Plugin Keymaps (will be used when plugins are loaded)
 -- ============================================================================
 
--- File Explorer (neo-tree)
-keymap('n', '<leader>e', '<cmd>Neotree toggle<CR>', { desc = 'Toggle file explorer' })
-keymap('n', '<leader>o', '<cmd>Neotree focus<CR>', { desc = 'Focus file explorer' })
+-- File Explorer (nvim-tree)
+keymap('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+keymap('n', '<leader>o', '<cmd>NvimTreeFocus<CR>', { desc = 'Focus file explorer' })
+keymap('n', '<leader>nf', '<cmd>NvimTreeFindFile<CR>', { desc = 'Find current file in tree' })
 
 -- Telescope
 keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { desc = 'Find files' })
@@ -139,8 +149,9 @@ keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = 'Next diag
 keymap('n', '<leader>dl', '<cmd>Telescope diagnostics<CR>', { desc = 'List diagnostics' })
 
 -- Comment (will work with Comment.nvim)
-keymap('n', '<C-/>', '<Plug>(comment_toggle_linewise_current)', { desc = 'Comment line' })
-keymap('v', '<C-/>', '<Plug>(comment_toggle_linewise_visual)', { desc = 'Comment selection' })
+-- Use remap = true to allow mapping to plugin mappings like gcc
+keymap('n', '<C-/>', 'gcc', { desc = 'Comment line', remap = true })
+keymap('v', '<C-/>', 'gc', { desc = 'Comment selection', remap = true })
 
 -- Trouble (diagnostics viewer)
 keymap('n', '<leader>xx', '<cmd>TroubleToggle<CR>', { desc = 'Toggle trouble' })

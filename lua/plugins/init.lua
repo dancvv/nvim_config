@@ -4,28 +4,28 @@
 -- ============================================================================
 
 -- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable',
     lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
 -- Load plugins
-require("lazy").setup({
+require('lazy').setup({
   -- Import plugin specifications from lua/plugins
-  { import = "plugins.ui" },
-  { import = "plugins.editor" },
-  { import = "plugins.lsp" },
-  { import = "plugins.coding" },
-  { import = "plugins.git" },
-  { import = "plugins.tools" },
+  { import = 'plugins.ui' },
+  { import = 'plugins.editor' },
+  { import = 'plugins.lsp' },
+  { import = 'plugins.coding' },
+  { import = 'plugins.git' },
+  { import = 'plugins.tools' },
 }, {
   -- Lazy.nvim configuration
   defaults = {
@@ -33,7 +33,7 @@ require("lazy").setup({
     version = false, -- Use latest git commit
   },
   install = {
-    colorscheme = { "catppuccin" },
+    colorscheme = { 'catppuccin' },
   },
   checker = {
     enabled = true, -- Check for plugin updates
@@ -42,18 +42,18 @@ require("lazy").setup({
   performance = {
     rtp = {
       disabled_plugins = {
-        "gzip",
-        "matchit",
-        "matchparen",
-        "netrwPlugin",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
+        'gzip',
+        'matchit',
+        'matchparen',
+        'netrwPlugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
       },
     },
   },
   ui = {
-    border = "rounded",
+    border = 'rounded',
   },
 })

@@ -76,7 +76,7 @@ opt.lazyredraw = false -- Don't redraw during macros (can cause issues)
 -- ============================================================================
 -- Command Line
 -- ============================================================================
-opt.cmdheight = 2 -- Command line height (prevents cmdline from flashing back to first line)
+opt.cmdheight = 1 -- Command line height
 opt.showcmd = true -- Show command in statusline
 opt.completeopt = { 'menu', 'menuone', 'noselect' } -- Completion options
 

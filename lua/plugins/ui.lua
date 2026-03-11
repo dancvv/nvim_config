@@ -72,7 +72,7 @@ return {
               },
             },
           },
-          lualine_x = { 'encoding', 'fileformat', 'filetype' },
+          lualine_x = {},
           lualine_y = { 'progress' },
           lualine_z = { 'location' },
         },
@@ -134,6 +134,10 @@ return {
   -- Indent guides
   {
     'lukas-reineke/indent-blankline.nvim',
+    -- Only enable in true Neovim, not in VSCode's Neovim extension
+    cond = function()
+      return not vim.g.vscode
+    end,
     event = { 'BufReadPost', 'BufNewFile' },
     main = 'ibl',
     opts = {

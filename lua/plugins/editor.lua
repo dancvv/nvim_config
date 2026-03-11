@@ -54,6 +54,21 @@ return {
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
+      -- 自定义nvim-tree的键映射
+      local function on_attach(bufnr)
+        local api = require('nvim-tree.api')
+        local function opts(desc)
+          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+        end
+
+        -- 默认键位
+        api.config.mappings.default_on_attach(bufnr)
+
+        -- 添加自定义键位：Ctrl+j/k 快速移动
+        vim.keymap.set('n', '<C-j>', '5j', opts('Move down 5 lines'))
+        vim.keymap.set('n', '<C-k>', '5k', opts('Move up 5 lines'))
+      end
+
       require('nvim-tree').setup({
         -- Automatically close the tree when it's the last window
         auto_reload_on_write = true,
@@ -66,6 +81,7 @@ return {
           enable = true,
           update_root = false,
         },
+        on_attach = on_attach,
         view = {
           adaptive_size = false,
           side = 'left',

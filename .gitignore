@@ -5,6 +5,7 @@ CLAUDE.md
 CMDLINE_GUIDE.md
 GUIDE.md
 FORMAT.md
+lazy-lock.json
 
 # LSP and Mason
 .luarc.json

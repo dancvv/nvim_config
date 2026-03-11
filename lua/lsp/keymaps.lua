@@ -50,10 +50,11 @@ function M.setup()
       vim.keymap.set("n", "<leader>ds", "<cmd>Telescope lsp_document_symbols<CR>", vim.tbl_extend("force", opts, { desc = "Document symbols" }))
       vim.keymap.set("n", "<leader>ws", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
 
-      -- Inlay hints toggle
+      -- Inlay hints toggle (0.10+ new API signature)
       if vim.lsp.inlay_hint then
         vim.keymap.set("n", "<leader>uh", function()
-          vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+          local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = 0 })
+          vim.lsp.inlay_hint.enable(not enabled, { bufnr = 0 })
         end, vim.tbl_extend("force", opts, { desc = "Toggle inlay hints" }))
       end
     end,

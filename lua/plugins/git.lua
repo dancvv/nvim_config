@@ -3,6 +3,9 @@
 -- Git signs, lazygit, diffview
 -- ============================================================================
 
+-- VSCode provides its own git integration (Source Control panel)
+if vim.g.vscode then return {} end
+
 return {
   -- Git signs
   {

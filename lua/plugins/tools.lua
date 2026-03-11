@@ -3,10 +3,13 @@
 -- Terminal, session management, etc.
 -- ============================================================================
 
+local not_vscode = not vim.g.vscode -- VSCode provides terminal and session management
+
 return {
   -- Terminal
   {
     "akinsho/toggleterm.nvim",
+    cond = not_vscode,
     version = "*",
     cmd = { "ToggleTerm", "ToggleTermToggleAll", "TermExec" },
     keys = {
@@ -87,6 +90,7 @@ return {
   -- Session management
   {
     "folke/persistence.nvim",
+    cond = not_vscode,
     event = "BufReadPre",
     opts = {
       options = vim.opt.sessionoptions:get(),
@@ -119,6 +123,7 @@ return {
   -- Project management
   {
     "ahmedkhalf/project.nvim",
+    cond = not_vscode,
     event = "VeryLazy",
     config = function()
       require("project_nvim").setup({

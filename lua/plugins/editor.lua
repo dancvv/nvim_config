@@ -3,10 +3,13 @@
 -- File explorer, fuzzy finder, comments, etc.
 -- ============================================================================
 
+local not_vscode = not vim.g.vscode -- VSCode provides explorer, search, diagnostics
+
 return {
   -- Auto save
   {
     'okuuva/auto-save.nvim',
+    cond = not_vscode, -- VSCode auto-saves natively
     event = { 'InsertLeave', 'TextChanged' },
     opts = {
       enabled = true,
@@ -38,6 +41,7 @@ return {
   -- File Explorer
   {
     'nvim-tree/nvim-tree.lua',
+    cond = not_vscode,
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile' },
     dependencies = {
       'nvim-tree/nvim-web-devicons',
@@ -143,7 +147,7 @@ return {
         filters = {
           dotfiles = false,
           git_ignored = false,
-          custom = { 'node_modules', '.git', '.DS_Store' },
+          custom = { 'node_modules', '^\\.git$', '^\\.DS_Store$' },
         },
       })
     end,
@@ -152,6 +156,7 @@ return {
   -- Fuzzy Finder
   {
     'nvim-telescope/telescope.nvim',
+    cond = not_vscode,
     cmd = 'Telescope',
     version = false,
     dependencies = {
@@ -228,40 +233,8 @@ return {
     end,
   },
 
-  -- Comments
-  {
-    'numToStr/Comment.nvim',
-    keys = {
-      { 'gcc', mode = 'n', desc = 'Comment line' },
-      { 'gc', mode = { 'n', 'v' }, desc = 'Comment' },
-      { 'gbc', mode = 'n', desc = 'Comment block' },
-      { 'gb', mode = { 'n', 'v' }, desc = 'Comment block' },
-    },
-    config = function()
-      require('Comment').setup({
-        padding = true,
-        sticky = true,
-        ignore = '^$',
-        toggler = {
-          line = 'gcc',
-          block = 'gbc',
-        },
-        opleader = {
-          line = 'gc',
-          block = 'gb',
-        },
-        extra = {
-          above = 'gcO',
-          below = 'gco',
-          eol = 'gcA',
-        },
-        mappings = {
-          basic = true,
-          extra = true,
-        },
-      })
-    end,
-  },
+  -- NOTE: Comment.nvim removed - Neovim 0.10+ has built-in gc/gcc comment operator
+  -- Use gcc (line), gc{motion}, or gc in visual mode
 
   -- Auto pairs
   {
@@ -353,22 +326,24 @@ return {
     },
   },
 
-  -- Trouble (better diagnostics)
+  -- Trouble (better diagnostics) - v3 API
   {
     'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
-    opts = { use_diagnostic_signs = true },
+    cond = not_vscode,
+    cmd = { 'Trouble' },
+    opts = {},
     keys = {
-      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document diagnostics (Trouble)' },
-      { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace diagnostics (Trouble)' },
-      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>', desc = 'Location list (Trouble)' },
-      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>', desc = 'Quickfix list (Trouble)' },
+      { '<leader>xx', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Buffer diagnostics (Trouble)' },
+      { '<leader>xX', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Workspace diagnostics (Trouble)' },
+      { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location list (Trouble)' },
+      { '<leader>xQ', '<cmd>Trouble quickfix toggle<cr>', desc = 'Quickfix list (Trouble)' },
     },
   },
 
   -- Todo comments
   {
     'folke/todo-comments.nvim',
+    cond = not_vscode,
     cmd = { 'TodoTrouble', 'TodoTelescope' },
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,

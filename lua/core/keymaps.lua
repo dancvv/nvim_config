@@ -10,10 +10,6 @@ local opts = { noremap = true, silent = true }
 -- General Mappings
 -- ============================================================================
 
--- Better escape
-keymap('i', 'jk', '<ESC>', opts)
-keymap('i', 'kj', '<ESC>', opts)
-
 -- Better move
 keymap('n', '<C-j>', '5j', opts)
 keymap('n', '<C-k>', '5k', opts)
@@ -108,52 +104,20 @@ keymap('n', '<C-Left>', '<cmd>vertical resize -2<CR>', opts)
 keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', opts)
 
 -- ============================================================================
--- Plugin Keymaps (will be used when plugins are loaded)
+-- Terminal
 -- ============================================================================
 
--- File Explorer (nvim-tree)
-keymap('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
-keymap('n', '<leader>o', '<cmd>NvimTreeFocus<CR>', { desc = 'Focus file explorer' })
-keymap('n', '<leader>nf', '<cmd>NvimTreeFindFile<CR>', { desc = 'Find current file in tree' })
-
--- Telescope
-keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { desc = 'Find files' })
-keymap('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { desc = 'Live grep' })
-keymap('n', '<leader>fb', '<cmd>Telescope buffers<CR>', { desc = 'Find buffers' })
-keymap('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'Help tags' })
-keymap('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>', { desc = 'Recent files' })
-keymap('n', '<leader>fc', '<cmd>Telescope grep_string<CR>', { desc = 'Find string under cursor' })
-keymap('n', '<leader>fp', '<cmd>Telescope projects<CR>', { desc = 'Find projects' })
-
--- Git
-keymap('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'LazyGit' })
-keymap('n', '<leader>gb', '<cmd>Telescope git_branches<CR>', { desc = 'Git branches' })
-keymap('n', '<leader>gc', '<cmd>Telescope git_commits<CR>', { desc = 'Git commits' })
-keymap('n', '<leader>gs', '<cmd>Telescope git_status<CR>', { desc = 'Git status' })
-
--- LSP keymaps will be set in lsp/keymaps.lua
-
--- Terminal
-keymap('n', '<C-\\>', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
-keymap('t', '<C-\\>', '<cmd>ToggleTerm<CR>', opts)
+-- Exit terminal mode (plugin-independent, not handled by toggleterm)
 keymap('t', '<ESC>', '<C-\\><C-n>', opts)
 
--- Code actions
-keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', { desc = 'Code action' })
-keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', { desc = 'Rename' })
-keymap('n', '<leader>fm', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { desc = 'Format' })
+-- ============================================================================
+-- Comments
+-- ============================================================================
 
--- Diagnostics
-keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = 'Previous diagnostic' })
-keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = 'Next diagnostic' })
-keymap('n', '<leader>dl', '<cmd>Telescope diagnostics<CR>', { desc = 'List diagnostics' })
-
--- Comment (will work with Comment.nvim)
--- Use remap = true to allow mapping to plugin mappings like gcc
+-- remap = true delegates to Comment.nvim plugin mappings (gcc / gc)
 keymap('n', '<C-/>', 'gcc', { desc = 'Comment line', remap = true })
 keymap('v', '<C-/>', 'gc', { desc = 'Comment selection', remap = true })
 
--- Trouble (diagnostics viewer)
-keymap('n', '<leader>xx', '<cmd>TroubleToggle<CR>', { desc = 'Toggle trouble' })
-keymap('n', '<leader>xw', '<cmd>TroubleToggle workspace_diagnostics<CR>', { desc = 'Workspace diagnostics' })
-keymap('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<CR>', { desc = 'Document diagnostics' })
+-- NOTE: All plugin-specific keymaps (file explorer, telescope, git, LSP,
+-- diagnostics, terminal toggle, trouble) are defined in their plugin specs
+-- using the `keys` option for proper lazy loading.

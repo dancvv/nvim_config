@@ -2,6 +2,9 @@
 *.log
 lazy-lock.json
 CLAUDE.md
+CMDLINE_GUIDE.md
+GUIDE.md
+FORMAT.md
 
 # LSP and Mason
 .luarc.json
@@ -12,6 +15,8 @@ CLAUDE.md
 .DS_Store
 Thumbs.db
 .history
+.claude
+.vscode
 
 # Backup files
 *.backup

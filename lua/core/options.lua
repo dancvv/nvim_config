@@ -100,30 +100,5 @@ opt.foldenable = true -- Enable folding
 -- ============================================================================
 opt.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 
--- ============================================================================
--- Disable built-in plugins
--- ============================================================================
-local disabled_built_ins = {
-  'netrw',
-  'netrwPlugin',
-  'netrwSettings',
-  'netrwFileHandlers',
-  'gzip',
-  'zip',
-  'zipPlugin',
-  'tar',
-  'tarPlugin',
-  'getscript',
-  'getscriptPlugin',
-  'vimball',
-  'vimballPlugin',
-  '2html_plugin',
-  'logipat',
-  'rrhelper',
-  'spellfile_plugin',
-  'matchit',
-}
-
-for _, plugin in pairs(disabled_built_ins) do
-  g['loaded_' .. plugin] = 1
-end
+-- NOTE: Built-in plugin disabling is handled by lazy.nvim's
+-- performance.rtp.disabled_plugins in lua/plugins/init.lua

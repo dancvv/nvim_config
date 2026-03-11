@@ -3,13 +3,28 @@
 -- Language Server Protocol setup with mason
 -- ============================================================================
 
+-- VSCode provides its own LSP client; skip all LSP plugins in VSCode
+if vim.g.vscode then return {} end
+
 return {
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      { "folke/neodev.nvim", opts = {} },
+      -- lazydev replaces neodev.nvim (Neovim 0.10+)
+      {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+          library = {
+            -- Load luvit types when vim.uv is used
+            { path = "luvit-meta/library", words = { "vim%.uv" } },
+          },
+        },
+      },
+      -- luvit-meta: type defs for vim.uv / libuv
+      { "Bilal2453/luvit-meta", lazy = true },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
@@ -25,22 +40,29 @@ return {
     cmd = "Mason",
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
-    config = function()
-      local icons = require("ui.icons")
-
-      require("mason").setup({
+    opts = function()
+      local ok, icons = pcall(require, "ui.icons")
+      local mason_icons = ok and icons.mason or {
+        package_installed = "✓",
+        package_pending = "➜",
+        package_uninstalled = "✗",
+      }
+      return {
         ui = {
           border = "rounded",
-          icons = {
-            package_installed = icons.mason.package_installed,
-            package_pending = icons.mason.package_pending,
-            package_uninstalled = icons.mason.package_uninstalled,
-          },
+          icons = mason_icons,
         },
-      })
+      }
+    end,
+  },
 
-      -- Ensure tools are installed
-      local ensure_installed = {
+  -- Tool installer: manages LSP servers, formatters, and linters via Mason
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "mason.nvim" },
+    event = "VeryLazy",
+    opts = {
+      ensure_installed = {
         -- LSP Servers
         "lua-language-server",
         "typescript-language-server",
@@ -53,7 +75,6 @@ return {
         "gopls",
         "pyright",
         "eslint-lsp",
-
         -- Formatters
         "stylua",
         "prettier",
@@ -62,26 +83,12 @@ return {
         "isort",
         "gofumpt",
         "goimports",
-
         -- Linters
         "eslint_d",
-      }
-
-      local mr = require("mason-registry")
-      local function install_ensured()
-        for _, tool in ipairs(ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(install_ensured)
-      else
-        install_ensured()
-      end
-    end,
+      },
+      auto_update = false,
+      run_on_start = true,
+    },
   },
 
   -- Mason LSP Config

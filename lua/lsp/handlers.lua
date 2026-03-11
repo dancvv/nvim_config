@@ -7,25 +7,21 @@ local M = {}
 
 -- Setup LSP handlers
 function M.setup()
-  local icons = require("ui.icons")
-
-  -- Configure diagnostic signs
-  local signs = {
-    { name = "DiagnosticSignError", text = icons.diagnostics.error },
-    { name = "DiagnosticSignWarn", text = icons.diagnostics.warn },
-    { name = "DiagnosticSignHint", text = icons.diagnostics.hint },
-    { name = "DiagnosticSignInfo", text = icons.diagnostics.info },
-  }
-
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+  local ok, icons = pcall(require, "ui.icons")
+  if not ok then
+    icons = { diagnostics = { error = "E", warn = "W", hint = "H", info = "I" } }
   end
 
-  -- Configure diagnostics
+  -- Configure diagnostics (Neovim 0.10+ signs API - replaces vim.fn.sign_define)
   vim.diagnostic.config({
     virtual_text = true,
     signs = {
-      active = signs,
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.diagnostics.error,
+        [vim.diagnostic.severity.WARN]  = icons.diagnostics.warn,
+        [vim.diagnostic.severity.HINT]  = icons.diagnostics.hint,
+        [vim.diagnostic.severity.INFO]  = icons.diagnostics.info,
+      },
     },
     update_in_insert = false,
     underline = true,
@@ -40,7 +36,7 @@ function M.setup()
     },
   })
 
-  -- Configure hover and signature help
+  -- Configure hover and signature help borders
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded",
   })
@@ -49,10 +45,7 @@ function M.setup()
     border = "rounded",
   })
 
-  -- Disable LSP progress notifications (reduces clutter)
-  vim.lsp.handlers["$/progress"] = function() end
-
-  -- Suppress other noisy LSP notifications
+  -- Suppress noisy LSP notifications
   local notify = vim.notify
   vim.notify = function(msg, level, opts)
     if msg and type(msg) == "string" then
@@ -67,36 +60,18 @@ function M.setup()
   end
 end
 
--- LSP capabilities with nvim-cmp
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
-M.capabilities.textDocument.completion.completionItem = {
-  documentationFormat = { "markdown", "plaintext" },
-  snippetSupport = true,
-  preselectSupport = true,
-  insertReplaceSupport = true,
-  labelDetailsSupport = true,
-  deprecatedSupport = true,
-  commitCharactersSupport = true,
-  tagSupport = { valueSet = { 1 } },
-  resolveSupport = {
-    properties = {
-      "documentation",
-      "detail",
-      "additionalTextEdits",
-    },
-  },
-}
-
--- Enhanced with cmp_nvim_lsp
+-- LSP capabilities: merge base + cmp_nvim_lsp (Neovim 0.10+ simplified)
 local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if has_cmp then
-  M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
-end
+M.capabilities = vim.tbl_deep_extend(
+  "force",
+  vim.lsp.protocol.make_client_capabilities(),
+  has_cmp and cmp_nvim_lsp.default_capabilities() or {}
+)
 
 -- On attach function (called when LSP attaches to buffer)
 function M.on_attach(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+  vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Highlight symbol under cursor
   if client.server_capabilities.documentHighlightProvider then
@@ -114,9 +89,9 @@ function M.on_attach(client, bufnr)
     })
   end
 
-  -- Enable inlay hints if available
+  -- Enable inlay hints if available (0.10+ new API signature)
   if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-    vim.lsp.inlay_hint.enable(bufnr, true)
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 end
 

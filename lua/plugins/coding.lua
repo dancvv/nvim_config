@@ -3,6 +3,8 @@
 -- Completion, snippets, treesitter
 -- ============================================================================
 
+local not_vscode = not vim.g.vscode -- VSCode handles completion; keep treesitter for text objects
+
 return {
   -- Treesitter: Better syntax highlighting
   {
@@ -20,32 +22,27 @@ return {
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
+          -- Core
           "bash",
           "c",
-          "html",
-          "javascript",
-          "json",
           "lua",
-          "luadoc",
-          "luap",
+          "vim",
           "markdown",
           "markdown_inline",
-          "python",
-          "query",
-          "regex",
-          "tsx",
-          "typescript",
-          "vim",
-          "vimdoc",
-          "yaml",
-          "toml",
-          "go",
-          "gomod",
-          "gowork",
-          "gosum",
+          -- Web
+          "html",
           "css",
           "scss",
+          "javascript",
+          "typescript",
+          "tsx",
           "vue",
+          "json",
+          "yaml",
+          "toml",
+          -- Languages
+          "go",
+          "python",
         },
         auto_install = true,
         highlight = {
@@ -103,6 +100,7 @@ return {
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
+    cond = not_vscode,
     version = false,
     event = "InsertEnter",
     dependencies = {
@@ -205,6 +203,7 @@ return {
   -- Snippets
   {
     "L3MON4D3/LuaSnip",
+    cond = not_vscode,
     build = "make install_jsregexp",
     dependencies = {
       "rafamadriz/friendly-snippets",

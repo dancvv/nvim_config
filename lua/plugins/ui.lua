@@ -3,6 +3,8 @@
 -- Statusline, bufferline, colorscheme, icons, etc.
 -- ============================================================================
 
+local not_vscode = not vim.g.vscode -- VSCode provides its own UI chrome
+
 return {
   -- Icons
   {
@@ -48,6 +50,7 @@ return {
   -- Statusline
   {
     'nvim-lualine/lualine.nvim',
+    cond = not_vscode,
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
@@ -83,6 +86,7 @@ return {
   -- Bufferline
   {
     'akinsho/bufferline.nvim',
+    cond = not_vscode,
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     keys = {
@@ -145,7 +149,7 @@ return {
         char = '│',
         tab_char = '│',
       },
-      scope = { enabled = false },
+      scope = { enabled = true },
       exclude = {
         filetypes = {
           'help',
@@ -166,6 +170,7 @@ return {
   -- Better UI components
   {
     'stevearc/dressing.nvim',
+    cond = not_vscode,
     event = 'VeryLazy',
     opts = {
       input = {
@@ -185,6 +190,7 @@ return {
   -- Dashboard
   {
     'goolord/alpha-nvim',
+    cond = not_vscode,
     event = 'VimEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
@@ -241,14 +247,12 @@ return {
   -- Which-key (shows keybindings)
   {
     'folke/which-key.nvim',
+    cond = not_vscode,
     event = 'VeryLazy',
-    init = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 300
-    end,
+    -- timeoutlen is set in core/options.lua, no need to repeat here
     opts = {
       preset = 'modern',
-      delay = 0, -- 立即显示，不等待
+      delay = 500, -- 500ms 后显示，避免瞬间弹出
       plugins = {
         spelling = {
           enabled = true,

@@ -10,10 +10,6 @@ local opts = { noremap = true, silent = true }
 -- General Mappings
 -- ============================================================================
 
--- Better move
-keymap('n', '<C-j>', '5j', opts)
-keymap('n', '<C-k>', '5k', opts)
-
 -- Save and quit
 keymap('n', '<C-s>', '<cmd>w<CR>', opts)
 keymap('i', '<C-s>', '<ESC><cmd>w<CR>', opts)
@@ -31,26 +27,26 @@ keymap('n', '<ESC>', '<cmd>nohlsearch<CR>', opts)
 keymap('n', '<C-h>', '<C-w>h', opts)
 keymap('n', '<C-l>', '<C-w>l', opts)
 
--- Fast vertical movement (5 lines at a time)
-keymap('n', '<C-j>', '5j', opts)
-keymap('n', '<C-k>', '5k', opts)
-keymap('v', '<C-j>', '5j', opts)
-keymap('v', '<C-k>', '5k', opts)
+-- Fast vertical movement (8 lines at a time)
+keymap('n', '<C-j>', '8j', opts)
+keymap('n', '<C-k>', '8k', opts)
+keymap('v', '<C-j>', '8j', opts)
+keymap('v', '<C-k>', '8k', opts)
 
 -- Navigate buffers
 keymap('n', '<S-l>', '<cmd>bnext<CR>', { desc = 'Next buffer' })
 keymap('n', '<S-h>', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
 keymap('n', '<leader>bd', '<cmd>bdelete<CR>', { desc = 'Delete buffer' })
 
--- Move to start/end of line
+-- Jump to start / end of line
 keymap({ 'n', 'v' }, 'H', '^', opts)
 keymap({ 'n', 'v' }, 'L', '$', opts)
 
 -- Move lines up and down
-keymap('n', '<A-j>', ':m .+1<CR>==', opts)
-keymap('n', '<A-k>', ':m .-2<CR>==', opts)
-keymap('v', '<A-j>', ":m '>+1<CR>gv=gv", opts)
-keymap('v', '<A-k>', ":m '<-2<CR>gv=gv", opts)
+keymap('n', '<A-j>', ':m .+4<CR>==', opts)
+keymap('n', '<A-k>', ':m .1<CR>==', opts)
+keymap('v', '<A-j>', ":m '>+4<CR>gv=gv", opts)
+keymap('v', '<A-k>', ":m '<1<CR>gv=gv", opts)
 
 -- Better vertical movement
 keymap('n', '<C-d>', '<C-d>zz', opts)
@@ -89,6 +85,10 @@ keymap('n', '<C-a>', 'ggVG', opts)
 -- Duplicate line
 keymap('n', '<C-S-d>', 'yyp', { desc = 'Duplicate line' })
 
+-- Insert mode: Emacs-style line navigation (Ctrl+A=Home, Ctrl+E=End)
+keymap('i', '<C-a>', '<Home>', { desc = 'Go to line start' })
+keymap('i', '<C-e>', '<End>', { desc = 'Go to line end' })
+
 -- ============================================================================
 -- Split Windows
 -- ============================================================================
@@ -98,10 +98,10 @@ keymap('n', '<leader>sh', '<cmd>split<CR>', { desc = 'Split horizontal' })
 keymap('n', '<leader>sx', '<cmd>close<CR>', { desc = 'Close split' })
 
 -- Resize windows
-keymap('n', '<C-Up>', '<cmd>resize +2<CR>', opts)
-keymap('n', '<C-Down>', '<cmd>resize -2<CR>', opts)
-keymap('n', '<C-Left>', '<cmd>vertical resize -2<CR>', opts)
-keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', opts)
+keymap('n', '<C-Up>', '<cmd>resize +5<CR>', opts)
+keymap('n', '<C-Down>', '<cmd>resize 1<CR>', opts)
+keymap('n', '<C-Left>', '<cmd>vertical resize 1<CR>', opts)
+keymap('n', '<C-Right>', '<cmd>vertical resize +5<CR>', opts)
 
 -- ============================================================================
 -- Terminal

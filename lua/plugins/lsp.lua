@@ -27,6 +27,8 @@ return {
       { "Bilal2453/luvit-meta", lazy = true },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      -- blink.cmp must load before LSP to provide enhanced capabilities
+      "saghen/blink.cmp",
     },
     config = function()
       -- Load LSP configuration

@@ -260,10 +260,8 @@ return {
         },
       })
 
-      -- Integration with nvim-cmp
-      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-      local cmp = require('cmp')
-      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+      -- NOTE: nvim-cmp integration removed (replaced by blink.cmp)
+      -- blink.cmp handles auto-brackets natively via completion.accept.auto_brackets
     end,
   },
 

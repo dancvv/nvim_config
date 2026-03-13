@@ -102,7 +102,39 @@ autocmd('FileType', {
   end,
 })
 
+-- ============================================================================
+-- NvimTree: Auto-close when it's the last window
+-- ============================================================================
+
+augroup('NvimTreeAutoClose', { clear = true })
+autocmd('QuitPre', {
+  group = 'NvimTreeAutoClose',
+  callback = function()
+    local tree_wins = {}
+    local floating_wins = {}
+    local wins = vim.api.nvim_list_wins()
+    for _, w in ipairs(wins) do
+      local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))
+      if bufname:match('NvimTree_') ~= nil then
+        table.insert(tree_wins, w)
+      end
+      if vim.api.nvim_win_get_config(w).relative ~= '' then
+        table.insert(floating_wins, w)
+      end
+    end
+    -- If only nvim-tree (+ floating) windows remain, close them so vim exits cleanly
+    if #wins - #floating_wins - #tree_wins == 1 then
+      for _, w in ipairs(tree_wins) do
+        vim.api.nvim_win_close(w, true)
+      end
+    end
+  end,
+})
+
+-- ============================================================================
 -- Set indentation for specific file types
+-- ============================================================================
+
 augroup('FileTypeIndent', { clear = true })
 autocmd('FileType', {
   group = 'FileTypeIndent',

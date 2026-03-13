@@ -126,3 +126,12 @@ keymap("n", "<leader>uz", call("workbench.action.toggleZenMode"),   { desc = "To
 keymap("n", "za", call("editor.toggleFold"),                        { desc = "Toggle fold" })
 keymap("n", "zM", call("editor.foldAll"),                           { desc = "Fold all" })
 keymap("n", "zR", call("editor.unfoldAll"),                         { desc = "Unfold all" })
+
+-- ============================================================================
+-- Line Navigation → must be LAST to override <S-h>/<S-l> above
+-- H == <S-h>, L == <S-l> in Vim; later mapping wins
+-- ============================================================================
+
+local vopts = { noremap = true, silent = true }
+keymap({ "n", "v" }, "H", "^", vopts)
+keymap({ "n", "v" }, "L", "$", vopts)

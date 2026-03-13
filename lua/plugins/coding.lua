@@ -97,116 +97,82 @@ return {
     end,
   },
 
-  -- Autocompletion
+  -- Autocompletion: blink.cmp (modern, faster alternative to nvim-cmp)
   {
-    "hrsh7th/nvim-cmp",
+    "saghen/blink.cmp",
     cond = not_vscode,
-    version = false,
-    event = "InsertEnter",
+    version = "*", -- Use latest stable release for API stability
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "saadparwaiz1/cmp_luasnip",
-      "L3MON4D3/LuaSnip",
-      "rafamadriz/friendly-snippets",
+      -- Snippet engine + community snippets
+      {
+        "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
+        dependencies = { "rafamadriz/friendly-snippets" },
+      },
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local icons = require("ui.icons")
+    opts = {
+      -- Use LuaSnip as snippet engine
+      snippets = { preset = "luasnip" },
 
-      -- Load snippets
-      require("luasnip.loaders.from_vscode").lazy_load()
+      -- Keymap: super-tab (Tab selects/accepts/expands) + Enter to confirm
+      keymap = {
+        preset = "super-tab",
+        ["<CR>"]  = { "accept", "fallback" },
+        ["<C-e>"] = { "hide", "fallback" },
+        ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+        ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+      },
 
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        }),
-        formatting = {
-          fields = { "kind", "abbr", "menu" },
-          format = function(entry, vim_item)
-            vim_item.kind = string.format("%s %s", icons.lsp_kinds[vim_item.kind], vim_item.kind)
-            vim_item.menu = ({
-              nvim_lsp = "[LSP]",
-              luasnip = "[Snippet]",
-              buffer = "[Buffer]",
-              path = "[Path]",
-            })[entry.source.name]
-            return vim_item
-          end,
-        },
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-        experimental = {
-          ghost_text = true,
-        },
-      })
+      -- Appearance: inherit nvim-cmp highlight groups (Catppuccin compat)
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "mono",
+      },
 
-      -- Use buffer source for `/` and `?`
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = "buffer" },
+      completion = {
+        -- Auto-insert brackets after function/method completions
+        accept = { auto_brackets = { enabled = true } },
+
+        -- Ghost text (inline preview of top suggestion)
+        ghost_text = { enabled = true },
+
+        -- Documentation popup
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+          window = { border = "rounded" },
         },
-      })
 
-      -- Use cmdline & path source for ':'
-      cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, {
-          { name = "cmdline" },
-        }),
-      })
-    end,
-  },
+        -- Completion menu
+        menu = {
+          border = "rounded",
+          draw = {
+            treesitter = { "lsp" }, -- use treesitter highlighting in menu
+            columns = {
+              { "label", "label_description", gap = 1 },
+              { "kind_icon", "kind", gap = 1 },
+            },
+          },
+        },
+      },
 
-  -- Snippets
-  {
-    "L3MON4D3/LuaSnip",
-    cond = not_vscode,
-    build = "make install_jsregexp",
-    dependencies = {
-      "rafamadriz/friendly-snippets",
+      -- Sources: LSP, path, snippets, buffer
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
+
+      -- Cmdline completion (API v1: top-level key, not sources.cmdline)
+      cmdline = {
+        sources = { "cmdline" },
+      },
+
+      -- Inline signature help (replaces nvim-cmp's signature popup)
+      signature = {
+        enabled = true,
+        window = { border = "rounded" },
+      },
     },
+    opts_extend = { "sources.default" },
   },
 }

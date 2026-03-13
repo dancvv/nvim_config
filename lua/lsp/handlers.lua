@@ -60,12 +60,13 @@ function M.setup()
   end
 end
 
--- LSP capabilities: merge base + cmp_nvim_lsp (Neovim 0.10+ simplified)
-local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+-- LSP capabilities: blink.cmp provides enhanced capabilities (replaces cmp_nvim_lsp)
+-- blink.get_lsp_capabilities() already merges with base capabilities internally
+local has_blink, blink = pcall(require, "blink.cmp")
 M.capabilities = vim.tbl_deep_extend(
   "force",
   vim.lsp.protocol.make_client_capabilities(),
-  has_cmp and cmp_nvim_lsp.default_capabilities() or {}
+  has_blink and blink.get_lsp_capabilities() or {}
 )
 
 -- On attach function (called when LSP attaches to buffer)

@@ -28,10 +28,10 @@ keymap('n', '<C-h>', '<C-w>h', opts)
 keymap('n', '<C-l>', '<C-w>l', opts)
 
 -- Fast vertical movement (8 lines at a time)
-keymap('n', '<C-j>', '8j', opts)
-keymap('n', '<C-k>', '8k', opts)
-keymap('v', '<C-j>', '8j', opts)
-keymap('v', '<C-k>', '8k', opts)
+keymap('n', '<C-j>', '5j', opts)
+keymap('n', '<C-k>', '5k', opts)
+keymap('v', '<C-j>', '5j', opts)
+keymap('v', '<C-k>', '5k', opts)
 
 -- Navigate buffers
 keymap('n', '<S-l>', '<cmd>bnext<CR>', { desc = 'Next buffer' })

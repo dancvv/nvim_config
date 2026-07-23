@@ -99,16 +99,9 @@ local function dashboard()
     and not vim.env.TMUX
     and vim.api.nvim_ui_send ~= nil
   local has_chafa_image = readable_image and vim.fn.executable('chafa') == 1
-  local has_image = has_warp_image or has_chafa_image
-  local compact = vim.o.columns < 125 and vim.o.lines < 38
-  local menu_pane = has_image and 2 or 1
-  local image_width = compact and 36 or 60
-  local image_height = compact and 10 or 17
-  local image_indent = compact and 12 or 0
-
-  if compact then
-    menu_pane = 1
-  end
+  local image_width = 22
+  local image_height = 20
+  local image_indent = 19
 
   local sections = {}
   local hide_image = function() end
@@ -130,7 +123,7 @@ local function dashboard()
       }, ' '),
       height = image_height,
       indent = image_indent,
-      padding = compact and 0 or 1,
+      padding = 1,
       ttl = 3600,
     }
   else
@@ -151,13 +144,12 @@ local function dashboard()
   end
 
   sections[#sections + 1] = {
-    pane = menu_pane,
     {
       text = {
         { '欢迎回来', hl = 'SnacksDashboardTitle' },
       },
       align = 'center',
-      padding = compact and { 0, 1 } or { 1, 1 },
+      padding = { 1, 1 },
     },
     {
       text = {
@@ -165,9 +157,8 @@ local function dashboard()
       },
       align = 'center',
       padding = 1,
-      enabled = not compact,
     },
-    { section = 'keys', padding = compact and 0 or 1 },
+    { section = 'keys', padding = 1 },
     {
       icon = ' ',
       title = '最近打开',
@@ -175,7 +166,6 @@ local function dashboard()
       limit = 3,
       indent = 2,
       padding = 1,
-      enabled = not compact,
     },
     { section = 'startup' },
   }

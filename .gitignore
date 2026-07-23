@@ -1,6 +1,5 @@
 # Neovim data and cache
 *.log
-lazy-lock.json
 CLAUDE.md
 CMDLINE_GUIDE.md
 GUIDE.md

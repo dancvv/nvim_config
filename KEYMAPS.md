@@ -1,320 +1,127 @@
-# Neovim 配置快捷键参考
-
-## 说明
-
-- `<leader>` = 分号键 (`;`)
-- `<C-x>` = Ctrl + x
-- `<A-x>` = Alt/Option + x
-- `<S-x>` = Shift + x
-
-## 通用操作
-
-| 快捷键      | 模式          | 功能         |
-| ----------- | ------------- | ------------ |
-| `jk` / `kj` | Insert        | 退出插入模式 |
-| `<C-s>`     | Normal/Insert | 保存文件     |
-| `<leader>q` | Normal        | 退出         |
-| `<leader>Q` | Normal        | 强制退出所有 |
-| `<ESC>`     | Normal        | 清除搜索高亮 |
-
-## 导航
-
-### 窗口导航
-
-| 快捷键  | 功能           |
-| ------- | -------------- |
-| `<C-h>` | 移动到左侧窗口 |
-| `<C-l>` | 移动到右侧窗口 |
-
-### 快速移动
-
-| 快捷键  | 模式          | 功能           |
-| ------- | ------------- | -------------- |
-| `<C-j>` | Normal/Visual | 向下移动 5 行  |
-| `<C-k>` | Normal/Visual | 向上移动 5 行  |
-| `<C-d>` | Normal        | 向下半页并居中 |
-| `<C-u>` | Normal        | 向上半页并居中 |
-
-### 缓冲区导航
-
-| 快捷键                                          | 功能         |
-| ----------------------------------------------- | ------------ |
-| /find-employee-dept-by-period-id `<S-l>` / `]b` | 下一个缓冲区 |
-| `<S-h>` / `[b`                                  | 上一个缓冲区 |
-| `<leader>bd`                                    | 删除缓冲区   |
-| `<leader>bp`                                    | 固定缓冲区   |
-
-### 移动
-
-| 快捷键  | 模式          | 功能           |
-| ------- | ------------- | -------------- |
-| `H`     | Normal/Visual | 移动到行首     |
-| `L`     | Normal/Visual | 移动到行尾     |
-| `<C-d>` | Normal        | 向下半页并居中 |
-| `<C-u>` | Normal        | 向上半页并居中 |
-| `<A-j>` | Normal/Visual | 向下移动行     |
-| `<A-k>` | Normal/Visual | 向上移动行     |
-
-## 编辑
-
-| 快捷键      | 模式          | 功能                |
-| ----------- | ------------- | ------------------- |
-| `<`         | Visual        | 减少缩进 (保持选中) |
-| `>`         | Visual        | 增加缩进 (保持选中) |
-| `p`         | Visual        | 粘贴 (不覆盖寄存器) |
-| `<leader>d` | Normal/Visual | 删除不覆盖寄存器    |
-| `<C-a>`     | Normal        | 全选                |
-| `<C-S-d>`   | Normal        | 复制当前行          |
-
-## 快速跳转 (Flash)
-
-| 快捷键  | 模式                   | 功能                  |
-| ------- | ---------------------- | --------------------- |
-| `s`     | Normal/Visual/Operator | 快速跳转到任意位置    |
-| `S`     | Normal/Visual/Operator | Treesitter 语法树跳转 |
-| `r`     | Operator               | 远程 Flash 跳转       |
-| `R`     | Operator/Visual        | Treesitter 搜索       |
-| `<C-s>` | Command                | 切换 Flash 搜索       |
-
-## 分屏
-
-| 快捷键       | 功能         |
-| ------------ | ------------ |
-| `<leader>sv` | 垂直分屏     |
-| `<leader>sh` | 水平分屏     |
-| `<leader>sx` | 关闭当前分屏 |
-| `<C-Up>`     | 增加窗口高度 |
-| `<C-Down>`   | 减少窗口高度 |
-| `<C-Left>`   | 减少窗口宽度 |
-| `<C-Right>`  | 增加窗口宽度 |
-
-## 文件管理
-
-| 快捷键       | 功能                       |
-| ------------ | -------------------------- |
-| `<leader>e`  | 切换文件浏览器 (nvim-tree) |
-| `<leader>o`  | 聚焦文件浏览器             |
-| `<leader>nf` | 在树中定位当前文件         |
-
-### Nvim-tree 内部快捷键
-
-| 快捷键       | 功能            |
-| ------------ | --------------- |
-| `<CR>` / `o` | 打开文件/文件夹 |
-| `<C-v>`      | 垂直分屏打开    |
-| `<C-x>`      | 水平分屏打开    |
-| `<C-t>`      | 在新标签页打开  |
-| `a`          | 添加文件        |
-| `d`          | 删除            |
-| `r`          | 重命名          |
-| `x`          | 剪切            |
-| `c`          | 复制            |
-| `p`          | 粘贴            |
-| `y`          | 复制名称        |
-| `Y`          | 复制相对路径    |
-| `gy`         | 复制绝对路径    |
-| `R`          | 刷新            |
-| `?`          | 显示帮助        |
-
-## 搜索与查找 (Telescope)
-
-| 快捷键       | 功能               |
-| ------------ | ------------------ |
-| `<leader>ff` | 查找文件           |
-| `<leader>fg` | 全局搜索文本       |
-| `<leader>fb` | 查找缓冲区         |
-| `<leader>fh` | 查找帮助标签       |
-| `<leader>fr` | 最近打开的文件     |
-| `<leader>fc` | 搜索光标下的字符串 |
-| `<leader>fp` | 查找项目           |
-
-## LSP (代码智能)
-
-### 导航
-
-| 快捷键  | 功能           |
-| ------- | -------------- |
-| `gd`    | 跳转到定义     |
-| `gD`    | 跳转到声明     |
-| `gi`    | 跳转到实现     |
-| `gr`    | 查找引用       |
-| `gt`    | 跳转到类型定义 |
-| `K`     | 显示悬停文档   |
-| `<C-k>` | 签名帮助       |
-
-### 代码操作
-
-| 快捷键       | 模式          | 功能                |
-| ------------ | ------------- | ------------------- |
-| `<leader>ca` | Normal/Visual | 代码操作            |
-| `<leader>rn` | Normal        | 重命名符号          |
-| `<leader>fm` | Normal        | 手动格式化文档 ⭐️ |
-
-**注意**: 自动格式化已禁用，需要手动按 `<leader>fm` (即 `;fm`) 来格式化代码。
-
-### 诊断
-
-| 快捷键       | 功能         |
-| ------------ | ------------ |
-| `[d`         | 上一个诊断   |
-| `]d`         | 下一个诊断   |
-| `<leader>df` | 显示诊断浮窗 |
-| `<leader>dl` | 列出所有诊断 |
-
-### 符号
-
-| 快捷键       | 功能       |
-| ------------ | ---------- |
-| `<leader>ds` | 文档符号   |
-| `<leader>ws` | 工作区符号 |
-
-### 工作区
-
-| 快捷键       | 功能             |
-| ------------ | ---------------- |
-| `<leader>wa` | 添加工作区文件夹 |
-| `<leader>wr` | 移除工作区文件夹 |
-| `<leader>wl` | 列出工作区文件夹 |
-
-### 其他
-
-| 快捷键       | 功能         |
-| ------------ | ------------ |
-| `<leader>uh` | 切换内联提示 |
-
-## Git
-
-| 快捷键       | 功能               |
-| ------------ | ------------------ |
-| `<leader>gg` | 打开 LazyGit       |
-| `<leader>gf` | 当前文件的 LazyGit |
-| `<leader>gd` | 打开 DiffView      |
-| `<leader>gh` | 文件历史           |
-| `<leader>gb` | Git 分支           |
-| `<leader>gc` | Git 提交           |
-| `<leader>gs` | Git 状态           |
-
-### Git Hunks (Gitsigns)
-
-| 快捷键       | 模式          | 功能         |
-| ------------ | ------------- | ------------ |
-| `]h`         | Normal        | 下一个改动   |
-| `[h`         | Normal        | 上一个改动   |
-| `<leader>hs` | Normal/Visual | 暂存改动     |
-| `<leader>hr` | Normal/Visual | 重置改动     |
-| `<leader>hS` | Normal        | 暂存整个文件 |
-| `<leader>hu` | Normal        | 撤销暂存     |
-| `<leader>hR` | Normal        | 重置整个文件 |
-| `<leader>hp` | Normal        | 预览改动     |
-| `<leader>hb` | Normal        | 查看 blame   |
-| `<leader>hd` | Normal        | 差异对比     |
-
-### Git 冲突
-
-| 快捷键 | 功能           |
-| ------ | -------------- |
-| `co`   | 选择我们的改动 |
-| `ct`   | 选择他们的改动 |
-| `cb`   | 保留双方改动   |
-| `c0`   | 不选择任何改动 |
-| `]x`   | 下一个冲突     |
-| `[x`   | 上一个冲突     |
-
-## 注释
-
-| 快捷键   | 模式          | 功能                    |
-| -------- | ------------- | ----------------------- |
-| `gcc`    | Normal        | 注释/取消注释行         |
-| `gc`     | Normal/Visual | 注释                    |
-| `gbc`    | Normal        | 块注释                  |
-| `gb`     | Normal/Visual | 块注释                  |
-| `gcO`    | Normal        | 在上方添加注释          |
-| `gco`    | Normal        | 在下方添加注释          |
-| `gcA`    | Normal        | 在行尾添加注释          |
-| `<C-/>`  | Normal/Visual | 注释行/选区 (终端可用)  |
-
-**注意**: 推荐使用 `gcc` 和 `gc`，它们在所有环境下都能正常工作。
-
-## 终端
-
-| 快捷键  | 模式                   | 功能         |
-| ------- | ---------------------- | ------------ |
-| `<C-\>` | Normal/Insert/Terminal | 切换终端     |
-| `<ESC>` | Terminal               | 退出终端模式 |
-
-## 代码补全 (nvim-cmp)
-
-| 快捷键      | 模式   | 功能                    |
-| ----------- | ------ | ----------------------- |
-| `<C-Space>` | Insert | 触发补全                |
-| `<C-e>`     | Insert | 关闭补全                |
-| `<CR>`      | Insert | 确认补全                |
-| `<Tab>`     | Insert | 下一个补全项 / 跳转片段 |
-| `<S-Tab>`   | Insert | 上一个补全项 / 跳转片段 |
-| `<C-b>`     | Insert | 向上滚动文档            |
-| `<C-f>`     | Insert | 向下滚动文档            |
-
-## Trouble (诊断查看器)
-
-| 快捷键       | 功能           |
-| ------------ | -------------- |
-| `<leader>xx` | 切换文档诊断   |
-| `<leader>xX` | 切换工作区诊断 |
-| `<leader>xL` | 位置列表       |
-| `<leader>xQ` | 快速修复列表   |
-| `<leader>xt` | Todo 注释      |
-
-## Todo 注释
-
-| 快捷键       | 功能             |
-| ------------ | ---------------- |
-| `]t`         | 下一个 todo 注释 |
-| `[t`         | 上一个 todo 注释 |
-| `<leader>ft` | 搜索 todo 注释   |
-
-## 会话管理
-
-| 快捷键       | 功能           |
-| ------------ | -------------- |
-| `<leader>qs` | 恢复会话       |
-| `<leader>ql` | 恢复上次会话   |
-| `<leader>qd` | 不保存当前会话 |
-
-## 其他
-
-| 快捷键       | 功能                  |
-| ------------ | --------------------- |
-| `<leader>cm` | 打开 Mason            |
-| `<leader>un` | 关闭通知              |
-| `<C-space>`  | 增量选择 (Treesitter) |
-| `<bs>`       | 减量选择 (Treesitter) |
-
-## Text Objects (Treesitter)
-
-| 快捷键 | 功能           |
-| ------ | -------------- |
-| `af`   | 外部函数       |
-| `if`   | 内部函数       |
-| `ac`   | 外部类         |
-| `ic`   | 内部类         |
-| `aa`   | 外部参数       |
-| `ia`   | 内部参数       |
-| `]m`   | 下一个函数开始 |
-| `]M`   | 下一个函数结束 |
-| `[m`   | 上一个函数开始 |
-| `[M`   | 上一个函数结束 |
-| `]]`   | 下一个类开始   |
-| `][`   | 下一个类结束   |
-| `[[`   | 上一个类开始   |
-| `[]`   | 上一个类结束   |
-
-## 包围 (nvim-surround)
-
-| 快捷键             | 功能示例                                 |
-| ------------------ | ---------------------------------------- |
-| `ys{motion}{char}` | 添加包围, 例如 `ysiw"` 用引号包围单词    |
-| `ds{char}`         | 删除包围, 例如 `ds"` 删除引号            |
-| `cs{old}{new}`     | 改变包围, 例如 `cs"'` 将双引号改为单引号 |
-| `yss{char}`        | 包围整行                                 |
-| `ySS{char}`        | 包围整行并换行缩进                       |
-| `S{char}`          | 在 Visual 模式下包围选中内容             |
+# 快捷键
+
+`<leader>` 是分号键 `;`。按下 `;` 后，which-key 会显示当前可用分组。
+
+空白启动进入首页后，可直接按 `f` 查文件、`g` 搜正文、`r` 看最近文件、`n` 新建、`e` 浏览目录、`c` 编辑配置、`l` 管理插件、`q` 退出。
+
+## 通用与窗口
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `<C-s>` | 保存 |
+| `jk` | 退出 Insert 模式 |
+| `<leader>q` / `<leader>Q` | 退出窗口 / 强制退出全部 |
+| `H` / `L` | 跳到当前行行首 / 行尾 |
+| `<C-j>` / `<C-k>` | 向下 / 向上移动 5 行并居中 |
+| `<C-h>` / `<C-l>` | 切换左 / 右窗口 |
+| `<leader>wj` / `<leader>wk` | 切换下 / 上窗口 |
+| `<leader>wv` / `<leader>wh` | 垂直 / 水平分屏 |
+| `<leader>wq` / `<leader>wo` | 关闭窗口 / 仅保留当前窗口 |
+| `[b` / `]b` | 上一个 / 下一个 buffer |
+| `<leader>bb` / `<leader>bn` / `<leader>bd` | 上一个 / 新建 / 删除 buffer |
+| `<A-j>` / `<A-k>` | 向下 / 向上移动行或选区 |
+| `<C-a>` | 全选 |
+| `<leader>ul` / `<leader>uL` | 切换行号 / 相对行号 |
+| `<leader>uw` / `<leader>us` / `<leader>ud` | 切换换行 / 拼写 / 诊断 |
+
+## 文件、搜索与终端
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `<leader><space>` | 项目智能搜索 |
+| `<leader>ff` / `<leader>fF` | 从项目根 / 当前目录查文件 |
+| `<leader>fg` / `<leader>fG` | 从项目根 / 当前目录全文搜索 |
+| `<leader>fb` / `<leader>fr` / `<leader>fR` | Buffer / 项目最近文件 / 全局最近文件 |
+| `<leader>fc` / `<leader>fp` | 搜索当前词 / 项目列表 |
+| `<leader>fh` / `<leader>fk` | 帮助 / 快捷键搜索 |
+| `<leader>e` / `<leader>E` | 项目 Explorer / 当前文件目录 |
+| `<leader>-` | Oil 父目录编辑器 |
+| `<leader>sr` / `<leader>sw` | 搜索替换 / 替换当前词 |
+| `s` / `S` | Flash 跳转 / Treesitter 跳转 |
+| `<C-\>` / `<leader>tt` | 项目终端 |
+| `<Esc><Esc>` | 终端回到 Normal 模式 |
+
+## 多光标
+
+只想不断向下加光标时，重复按 `<C-Down>` 或 `<leader>mj`。
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `<C-Down>` / `<leader>mj` | 在下一行添加光标 |
+| `<leader>mk` | 在上一行添加光标 |
+| `<C-n>` / `<leader>mn` | 添加下一个匹配 |
+| `<leader>mN` | 添加上一个匹配 |
+| `<leader>ma` | 添加全部匹配 |
+| `<leader>ms` | 跳过下一个匹配 |
+| `<leader>mt` | 切换当前位置的光标 |
+| `<leader>mr` | 恢复上次光标 |
+| `<leader>m=` | 对齐光标 |
+| `<C-LeftMouse>` | 鼠标添加或移除光标 |
+| `<Esc>` | 清空多光标 |
+
+VS Code 模式下相同的向下、多匹配和全匹配按键会调用 VS Code 原生多光标命令。
+
+## LSP、补全与格式化
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `gd` / `gD` | 定义 / 声明 |
+| `gi` / `gr` / `gy` | 实现 / 引用 / 类型定义 |
+| `K` / Insert `<C-k>` | 悬停文档 / 签名帮助 |
+| `<leader>ca` / `<leader>rn` | Code action / 重命名 |
+| `<leader>co` / `<leader>cF` | 整理 imports / Fix all |
+| `[d` / `]d` | 上一个 / 下一个诊断 |
+| `<leader>df` / `<leader>dl` | 行诊断 / 诊断列表 |
+| `<leader>ds` / `<leader>ws` | 文档 / 工作区符号 |
+| `<leader>uh` | 切换 inlay hints |
+| `<leader>fm` / `<leader>uf` | 手动格式化 / 切换保存时格式化 |
+| Insert `<C-f>` / `<C-g>` | 接受 / 切换 inline completion |
+| `<leader>cm` | Mason |
+| `<leader>cI` / `<leader>cU` | 安装 / 更新开发工具 |
+
+## AI
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `<leader>aa` | 打开或关闭 Agent |
+| `<leader>as` / `<leader>ad` | 选择 Agent / 关闭 Agent 会话 |
+| `<leader>ac` / `<leader>aC` / `<leader>ag` | Codex / Claude / Gemini |
+| `<leader>aL` | 开启或关闭 Copilot LSP，默认关闭 |
+| `<leader>at` / `<leader>af` / Visual `<leader>av` | 发送上下文 / 文件 / 选区 |
+| `<leader>ap` | Agent prompt 库 |
+| `<leader>an` / `<leader>au` / `<leader>aT` | 应用 / 请求 / 切换 Copilot Next Edit |
+| `<C-.>` | 聚焦 Agent |
+
+VS Code 模式使用 `<leader>aa` 打开 Chat、`<leader>aA` 打开 Agent、`<leader>ai` 打开 Inline Chat。
+
+## Git 与调试
+
+| 快捷键 | 功能 |
+| --- | --- |
+| `<leader>gg` | LazyGit |
+| `<leader>gs` / `<leader>gl` / `<leader>gL` | 状态 / 仓库日志 / 文件日志 |
+| `<leader>gb` / `<leader>go` | 分支 / 打开 Git URL |
+| `<leader>gd` / `<leader>gh` | Diffview / 文件历史 |
+| `]h` / `[h` | 下一个 / 上一个 hunk |
+| `<leader>hs` / `<leader>hr` | 暂存 / 重置 hunk |
+| `<leader>hS` / `<leader>hR` | 暂存 / 重置文件 |
+| `<leader>hp` / `<leader>hb` | 预览 hunk / 当前行 blame |
+| `<F5>` / `<F10>` / `<F11>` / `<F12>` | 继续 / 单步越过 / 进入 / 跳出 |
+| `<leader>db` / `<leader>dB` | 断点 / 条件断点 |
+| `<leader>dc` / `<leader>dl` | 继续 / 重跑上次调试 |
+| `<leader>dr` / `<leader>dq` / `<leader>du` | REPL / 结束 / 调试 UI |
+
+## 工具与命令
+
+| 快捷键或命令 | 功能 |
+| --- | --- |
+| `<leader>rr` / `<leader>ra` | 运行当前 / 全部 HTTP 请求 |
+| `<leader>ri` / `<leader>rs` | 检查请求 / HTTP scratchpad |
+| `<leader>DD` / `<leader>Da` | 数据库 UI / 添加连接 |
+| `<leader>xx` / `<leader>xX` | 当前 buffer / 工作区诊断 |
+| `<leader>xL` / `<leader>xQ` | Location / Quickfix 列表 |
+| `:NvimRoot` / `:NvimConfig` | 显示项目根 / 打开配置 |
+| `:NvimDoctor` / `:NvimHealth` | 检查外部依赖 / 核心健康 |
+| `:NvimUpdate` | 更新并清理插件 |
+| `:CopilotOn` / `:CopilotOff` | 开启 / 关闭 Copilot LSP |
+| `:TSInstallConfigured` | 安装配置声明的 Treesitter parsers |

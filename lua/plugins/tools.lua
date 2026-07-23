@@ -1,201 +1,45 @@
--- ============================================================================
--- Tool Plugins
--- Terminal, session management, etc.
--- ============================================================================
-
-local not_vscode = not vim.g.vscode -- VSCode provides terminal and session management
-
 return {
-  -- Terminal
   {
-    "akinsho/toggleterm.nvim",
-    cond = not_vscode,
-    version = "*",
-    cmd = { "ToggleTerm", "ToggleTermToggleAll", "TermExec" },
+    'mistweaverco/kulala.nvim',
+    ft = { 'http', 'rest' },
+    cmd = 'Kulala',
     keys = {
-      { "<C-\\>", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle floating terminal" },
-      { "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Toggle horizontal terminal" },
-      { "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", desc = "Toggle vertical terminal" },
+      { '<leader>rr', function() require('kulala').run() end, desc = 'Run HTTP request' },
+      { '<leader>ra', function() require('kulala').run_all() end, desc = 'Run all HTTP requests' },
+      { '<leader>ri', function() require('kulala').inspect() end, desc = 'Inspect HTTP request' },
+      { '<leader>rs', function() require('kulala').scratchpad() end, desc = 'HTTP scratchpad' },
     },
     opts = {
-      size = function(term)
-        if term.direction == "horizontal" then
-          return 15
-        elseif term.direction == "vertical" then
-          return vim.o.columns * 0.4
-        elseif term.direction == "float" then
-          return 20
-        end
-      end,
-      open_mapping = [[<C-\>]],
-      hide_numbers = true,
-      shade_terminals = false,
-      start_in_insert = true,
-      insert_mappings = true,
-      terminal_mappings = true,
-      persist_size = true,
-      persist_mode = true,
-      direction = "float",
-      close_on_exit = true,
-      shell = vim.o.shell,
-      auto_scroll = true,
-      float_opts = {
-        border = "curved",
-        width = function()
-          return math.floor(vim.o.columns * 0.8)
-        end,
-        height = function()
-          return math.floor(vim.o.lines * 0.8)
-        end,
-        winblend = 0,
-        row = function()
-          return math.floor(vim.o.lines * 0.1)
-        end,
-        col = function()
-          return math.floor(vim.o.columns * 0.1)
-        end,
-      },
-      winbar = {
-        enabled = false,
-      },
+      global_keymaps = false,
+      kulala_keymaps = false,
     },
   },
 
-  -- Better quickfix
   {
-    "kevinhwang91/nvim-bqf",
-    ft = "qf",
-    opts = {
-      auto_enable = true,
-      preview = {
-        win_height = 12,
-        win_vheight = 12,
-        delay_syntax = 80,
-        border = "rounded",
-      },
-      func_map = {
-        vsplit = "",
-        ptogglemode = "z,",
-        stoggleup = "",
-      },
-      filter = {
-        fzf = {
-          action_for = { ["ctrl-s"] = "split" },
-          extra_opts = { "--bind", "ctrl-o:toggle-all", "--prompt", "> " },
-        },
-      },
-    },
+    'tpope/vim-dadbod',
+    cmd = 'DB',
   },
 
-  -- Session management
   {
-    "folke/persistence.nvim",
-    cond = not_vscode,
-    event = "BufReadPre",
-    opts = {
-      options = vim.opt.sessionoptions:get(),
+    'kristijanhusak/vim-dadbod-ui',
+    cmd = { 'DBUI', 'DBUIToggle', 'DBUIAddConnection', 'DBUIFindBuffer' },
+    dependencies = {
+      'tpope/vim-dadbod',
+      'kristijanhusak/vim-dadbod-completion',
     },
     keys = {
-      {
-        "<leader>qs",
-        function()
-          require("persistence").load()
-        end,
-        desc = "Restore session",
-      },
-      {
-        "<leader>ql",
-        function()
-          require("persistence").load({ last = true })
-        end,
-        desc = "Restore last session",
-      },
-      {
-        "<leader>qd",
-        function()
-          require("persistence").stop()
-        end,
-        desc = "Don't save current session",
-      },
+      { '<leader>DD', '<cmd>DBUIToggle<cr>', desc = 'Database UI' },
+      { '<leader>Da', '<cmd>DBUIAddConnection<cr>', desc = 'Add database connection' },
     },
-  },
-
-  -- Project management
-  {
-    "ahmedkhalf/project.nvim",
-    cond = not_vscode,
-    event = "VeryLazy",
-    config = function()
-      require("project_nvim").setup({
-        detection_methods = { "pattern", "lsp" },
-        patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" },
-        silent_chdir = true,
-        scope_chdir = "global",
-      })
-
-      require("telescope").load_extension("projects")
-    end,
-    keys = {
-      { "<leader>fp", "<cmd>Telescope projects<cr>", desc = "Find projects" },
-    },
-  },
-
-  -- Better escape
-  {
-    "max397574/better-escape.nvim",
-    event = "InsertEnter",
-    opts = {
-      timeout = 200,
-      default_mappings = false,
-      mappings = {
-        i = {
-          j = {
-            k = "<Esc>",
-            j = "<Esc>",
-          },
-          k = {
-            j = "<Esc>",
-            k = "<Esc>",
-          },
-        },
-      },
-    },
-  },
-
-  -- Smooth scrolling
-  {
-    "karb94/neoscroll.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("neoscroll").setup({
-        mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "zt", "zz", "zb" },
-        hide_cursor = true,
-        stop_eof = true,
-        respect_scrolloff = false,
-        cursor_scrolls_alone = true,
-      })
+    init = function()
+      vim.g.db_ui_use_nerd_fonts = 1
+      vim.g.db_ui_save_location = vim.fn.stdpath('data') .. '/dadbod-ui'
+      vim.g.db_ui_execute_on_save = 0
     end,
   },
 
-  -- Highlight colors
   {
-    "NvChad/nvim-colorizer.lua",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      filetypes = { "*" },
-      user_default_options = {
-        RGB = true,
-        RRGGBB = true,
-        names = false,
-        RRGGBBAA = true,
-        AARRGGBB = true,
-        rgb_fn = true,
-        hsl_fn = true,
-        css = true,
-        css_fn = true,
-        mode = "background",
-        tailwind = true,
-      },
-    },
+    'kristijanhusak/vim-dadbod-completion',
+    ft = { 'sql', 'mysql', 'plsql' },
   },
 }

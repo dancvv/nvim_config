@@ -1,178 +1,134 @@
--- ============================================================================
--- Coding Plugins
--- Completion, snippets, treesitter
--- ============================================================================
-
-local not_vscode = not vim.g.vscode -- VSCode handles completion; keep treesitter for text objects
+local parsers = {
+  'bash',
+  'c',
+  'comment',
+  'cpp',
+  'css',
+  'diff',
+  'dockerfile',
+  'git_config',
+  'git_rebase',
+  'gitattributes',
+  'gitcommit',
+  'gitignore',
+  'go',
+  'gomod',
+  'gosum',
+  'gowork',
+  'graphql',
+  'hcl',
+  'html',
+  'java',
+  'javascript',
+  'json',
+  'lua',
+  'luadoc',
+  'luap',
+  'markdown',
+  'markdown_inline',
+  'prisma',
+  'python',
+  'query',
+  'regex',
+  'rust',
+  'scss',
+  'sql',
+  'terraform',
+  'toml',
+  'tsx',
+  'typescript',
+  'vim',
+  'vimdoc',
+  'vue',
+  'xml',
+  'yaml',
+}
 
 return {
-  -- Treesitter: Better syntax highlighting
   {
-    "nvim-treesitter/nvim-treesitter",
-    version = false,
-    build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-    keys = {
-      { "<c-space>", desc = "Increment selection" },
-      { "<bs>", desc = "Decrement selection", mode = "x" },
-    },
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
+    build = ':TSUpdate',
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          -- Core
-          "bash",
-          "c",
-          "lua",
-          "vim",
-          "markdown",
-          "markdown_inline",
-          -- Web
-          "html",
-          "css",
-          "scss",
-          "javascript",
-          "typescript",
-          "tsx",
-          "vue",
-          "json",
-          "yaml",
-          "toml",
-          -- Languages
-          "go",
-          "python",
-        },
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-        indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
-          },
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-              ["]m"] = "@function.outer",
-              ["]]"] = "@class.outer",
-            },
-            goto_next_end = {
-              ["]M"] = "@function.outer",
-              ["]["] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[m"] = "@function.outer",
-              ["[["] = "@class.outer",
-            },
-            goto_previous_end = {
-              ["[M"] = "@function.outer",
-              ["[]"] = "@class.outer",
-            },
-          },
-        },
+      require('nvim-treesitter').setup({
+        install_dir = vim.fn.stdpath('data') .. '/site',
+      })
+
+      vim.api.nvim_create_user_command('TSInstallConfigured', function()
+        require('nvim-treesitter').install(parsers):wait(300000)
+      end, { desc = 'Install configured Treesitter parsers' })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('UserTreesitter', { clear = true }),
+        callback = function(event)
+          local language = vim.treesitter.language.get_lang(vim.bo[event.buf].filetype)
+          if language and pcall(vim.treesitter.start, event.buf, language) then
+            vim.wo.foldmethod = 'expr'
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
       })
     end,
   },
 
-  -- Autocompletion: blink.cmp (modern, faster alternative to nvim-cmp)
   {
-    "saghen/blink.cmp",
-    cond = not_vscode,
-    version = "*", -- Use latest stable release for API stability
-    event = { "InsertEnter", "CmdlineEnter" },
-    dependencies = {
-      -- Snippet engine + community snippets
-      {
-        "L3MON4D3/LuaSnip",
-        build = "make install_jsregexp",
-        dependencies = { "rafamadriz/friendly-snippets" },
-      },
-    },
+    'folke/ts-comments.nvim',
+    event = { 'BufReadPost', 'BufNewFile' },
+    opts = {},
+  },
+
+  {
+    'saghen/blink.cmp',
+    version = '1.*',
+    event = { 'InsertEnter', 'CmdlineEnter' },
+    dependencies = { 'rafamadriz/friendly-snippets' },
     opts = {
-      -- Use LuaSnip as snippet engine
-      snippets = { preset = "luasnip" },
-
-      -- Keymap: super-tab (Tab selects/accepts/expands) + Enter to confirm
+      snippets = { preset = 'default' },
       keymap = {
-        preset = "super-tab",
-        ["<CR>"]  = { "accept", "fallback" },
-        ["<C-e>"] = { "hide", "fallback" },
-        ["<C-b>"] = { "scroll_documentation_up", "fallback" },
-        ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+        preset = 'enter',
+        ['<Tab>'] = {
+          'snippet_forward',
+          function()
+            local ok, sidekick = pcall(require, 'sidekick')
+            return ok and sidekick.nes_jump_or_apply()
+          end,
+          function()
+            return vim.lsp.inline_completion.get()
+          end,
+          'fallback',
+        },
+        ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
       },
-
-      -- Appearance: inherit nvim-cmp highlight groups (Catppuccin compat)
-      appearance = {
-        use_nvim_cmp_as_default = true,
-        nerd_font_variant = "mono",
-      },
-
+      appearance = { nerd_font_variant = 'mono' },
       completion = {
-        -- Auto-insert brackets after function/method completions
         accept = { auto_brackets = { enabled = true } },
-
-        -- Ghost text (inline preview of top suggestion)
-        ghost_text = { enabled = true },
-
-        -- Documentation popup
         documentation = {
           auto_show = true,
-          auto_show_delay_ms = 200,
-          window = { border = "rounded" },
+          auto_show_delay_ms = 250,
+          window = { border = 'rounded' },
         },
-
-        -- Completion menu
+        ghost_text = { enabled = false },
         menu = {
-          border = "rounded",
+          border = 'rounded',
           draw = {
-            treesitter = { "lsp" }, -- use treesitter highlighting in menu
             columns = {
-              { "label", "label_description", gap = 1 },
-              { "kind_icon", "kind", gap = 1 },
+              { 'kind_icon' },
+              { 'label', 'label_description', gap = 1 },
+              { 'kind' },
             },
           },
         },
       },
-
-      -- Sources: LSP, path, snippets, buffer
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-      },
-
-      -- Cmdline completion (API v1: top-level key, not sources.cmdline)
+      sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
       cmdline = {
-        sources = { "cmdline" },
-      },
-
-      -- Inline signature help (replaces nvim-cmp's signature popup)
-      signature = {
         enabled = true,
-        window = { border = "rounded" },
+        keymap = { preset = 'cmdline' },
+        completion = { menu = { auto_show = true } },
       },
+      signature = { enabled = true, window = { border = 'rounded' } },
     },
-    opts_extend = { "sources.default" },
+    opts_extend = { 'sources.default' },
   },
 }

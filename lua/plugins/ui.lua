@@ -1,310 +1,389 @@
--- ============================================================================
--- UI Plugins
--- Statusline, bufferline, colorscheme, icons, etc.
--- ============================================================================
+local function snacks()
+  return require('snacks')
+end
 
-local not_vscode = not vim.g.vscode -- VSCode provides its own UI chrome
+local function root()
+  return require('config.root').get()
+end
+
+local function git_root()
+  return require('config.root').git()
+end
+
+local function warp_image(image, width, height, indent)
+  local image_id = (vim.fn.getpid() % 65535) * 256 + 71
+  local placement_id = image_id + 1
+  local sent = false
+  local closed = false
+  local dashboard
+  local last_pos
+
+  local function send(data)
+    if not closed then
+      pcall(vim.api.nvim_ui_send, data)
+    end
+  end
+
+  local function delete_placement()
+    send(('\27_Ga=d,d=i,i=%d,p=%d,q=2\27\\'):format(image_id, placement_id))
+  end
+
+  local function place()
+    vim.schedule(function()
+      if
+        closed
+        or not dashboard
+        or not last_pos
+        or not vim.api.nvim_win_is_valid(dashboard.win)
+        or vim.api.nvim_get_current_win() ~= dashboard.win
+      then
+        return
+      end
+      local win_pos = vim.fn.win_screenpos(dashboard.win)
+      local row = win_pos[1] + last_pos[1] - 1
+      local col = win_pos[2] + last_pos[2] + indent + 1
+      delete_placement()
+      send(('\27[%d;%dH'):format(row, col))
+      send(
+        ('\27_Ga=p,i=%d,p=%d,C=1,c=%d,r=%d,q=2\27\\'):format(
+          image_id,
+          placement_id,
+          width,
+          height
+        )
+      )
+    end)
+  end
+
+  local section = {
+    text = ('\n'):rep(height - 1),
+    render = function(self, pos)
+      dashboard = self
+      last_pos = { pos[1], pos[2] }
+      if not sent then
+        sent = true
+        send(
+          ('\27_Ga=t,t=f,f=100,i=%d,q=2;%s\27\\'):format(
+            image_id,
+            vim.base64.encode(vim.fn.fnamemodify(image, ':p'))
+          )
+        )
+        vim.api.nvim_create_autocmd('WinLeave', {
+          group = self.augroup,
+          buffer = self.buf,
+          callback = delete_placement,
+        })
+        vim.api.nvim_create_autocmd('WinEnter', {
+          group = self.augroup,
+          buffer = self.buf,
+          callback = place,
+        })
+        self.on('Closed', function()
+          delete_placement()
+          send(('\27_Ga=d,d=i,i=%d,q=2\27\\'):format(image_id))
+          closed = true
+        end, self.augroup)
+      end
+
+      place()
+    end,
+  }
+  return section, delete_placement
+end
+
+local function dashboard()
+  local image = vim.fn.stdpath('config') .. '/assets/dashboard.png'
+  local readable_image = vim.fn.filereadable(image) == 1
+  local has_warp_image = readable_image
+    and vim.env.TERM_PROGRAM == 'WarpTerminal'
+    and not vim.env.TMUX
+    and vim.api.nvim_ui_send ~= nil
+  local has_chafa_image = readable_image and vim.fn.executable('chafa') == 1
+  local has_image = has_warp_image or has_chafa_image
+  local compact = vim.o.columns < 125 and vim.o.lines < 38
+  local menu_pane = has_image and 2 or 1
+  local image_width = compact and 36 or 60
+  local image_height = compact and 10 or 17
+  local image_indent = compact and 12 or 0
+
+  if compact then
+    menu_pane = 1
+  end
+
+  local sections = {}
+  local hide_image = function() end
+  if has_warp_image then
+    sections[#sections + 1], hide_image = warp_image(image, image_width, image_height, image_indent)
+  elseif has_chafa_image then
+    sections[#sections + 1] = {
+      section = 'terminal',
+      cmd = table.concat({
+        'chafa',
+        vim.fn.shellescape(image),
+        '--format symbols',
+        '--symbols vhalf',
+        '--colors full',
+        ('--size %dx%d'):format(image_width, image_height),
+        '--stretch',
+        '--animate off',
+        '--probe off',
+      }, ' '),
+      height = image_height,
+      indent = image_indent,
+      padding = compact and 0 or 1,
+      ttl = 3600,
+    }
+  else
+    sections[#sections + 1] = {
+      text = {
+        { 'NEOVIM', hl = 'SnacksDashboardHeader' },
+      },
+      align = 'center',
+      padding = { 2, 1 },
+    }
+  end
+
+  local function dashboard_action(action)
+    return function()
+      hide_image()
+      action()
+    end
+  end
+
+  sections[#sections + 1] = {
+    pane = menu_pane,
+    {
+      text = {
+        { '欢迎回来', hl = 'SnacksDashboardTitle' },
+      },
+      align = 'center',
+      padding = compact and { 0, 1 } or { 1, 1 },
+    },
+    {
+      text = {
+        { '从一件小事开始，保持心流。', hl = 'Comment' },
+      },
+      align = 'center',
+      padding = 1,
+      enabled = not compact,
+    },
+    { section = 'keys', padding = compact and 0 or 1 },
+    {
+      icon = ' ',
+      title = '最近打开',
+      section = 'recent_files',
+      limit = 3,
+      indent = 2,
+      padding = 1,
+      enabled = not compact,
+    },
+    { section = 'startup' },
+  }
+
+  return {
+    enabled = true,
+    width = 60,
+    pane_gap = 5,
+    preset = {
+      keys = {
+        {
+          icon = ' ',
+          key = 'f',
+          desc = '查找文件',
+          action = dashboard_action(function() Snacks.dashboard.pick('files') end),
+        },
+        {
+          icon = ' ',
+          key = 'g',
+          desc = '全局搜索',
+          action = dashboard_action(function() Snacks.dashboard.pick('live_grep') end),
+        },
+        {
+          icon = ' ',
+          key = 'r',
+          desc = '最近打开',
+          action = dashboard_action(function() Snacks.dashboard.pick('oldfiles') end),
+        },
+        {
+          icon = ' ',
+          key = 'n',
+          desc = '新建文件',
+          action = dashboard_action(function() vim.cmd('ene | startinsert') end),
+        },
+        {
+          icon = '󰙅 ',
+          key = 'e',
+          desc = '文件浏览',
+          action = dashboard_action(function() Snacks.explorer() end),
+        },
+        {
+          icon = ' ',
+          key = 'c',
+          desc = '编辑配置',
+          action = dashboard_action(function()
+            Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })
+          end),
+        },
+        {
+          icon = '󰒲 ',
+          key = 'l',
+          desc = '插件管理',
+          action = dashboard_action(function() vim.cmd.Lazy() end),
+        },
+        {
+          icon = ' ',
+          key = 'q',
+          desc = '退出',
+          action = dashboard_action(function() vim.cmd.qa() end),
+        },
+      },
+    },
+    sections = sections,
+  }
+end
 
 return {
-  -- Icons
-  {
-    'nvim-tree/nvim-web-devicons',
-    lazy = true,
-    config = function()
-      require('nvim-web-devicons').setup({
-        override = {},
-        default = true,
-        strict = true,
-      })
-    end,
-  },
-
-  -- Colorscheme
   {
     'catppuccin/nvim',
     name = 'catppuccin',
     lazy = false,
     priority = 1000,
-    config = function()
-      require('catppuccin').setup({
-        flavour = 'mocha', -- latte, frappe, macchiato, mocha
-        transparent_background = false,
-        integrations = {
-          cmp = true,
-          gitsigns = true,
-          nvimtree = true,
-          telescope = true,
-          treesitter = true,
-          mini = true,
-          which_key = true,
-          indent_blankline = {
-            enabled = true,
-            colored_indent_levels = false,
-          },
-        },
-      })
+    opts = {
+      flavour = 'mocha',
+      transparent_background = false,
+      integrations = {
+        blink_cmp = true,
+        gitsigns = true,
+        mason = true,
+        mini = true,
+        native_lsp = { enabled = true },
+        snacks = true,
+        treesitter = true,
+        which_key = true,
+      },
+    },
+    config = function(_, opts)
+      require('catppuccin').setup(opts)
       vim.cmd.colorscheme('catppuccin')
     end,
   },
 
-  -- Statusline
+  {
+    'folke/snacks.nvim',
+    priority = 900,
+    event = 'VeryLazy',
+    keys = {
+      { '<leader><space>', function() snacks().picker.smart({ cwd = root() }) end, desc = 'Smart find' },
+      { '<leader>/', function() snacks().picker.grep({ cwd = root() }) end, desc = 'Grep project' },
+      { '<leader>,', function() snacks().picker.buffers() end, desc = 'Buffers' },
+      { '<leader>ff', function() snacks().picker.files({ cwd = root() }) end, desc = 'Find files' },
+      { '<leader>fF', function() snacks().picker.files({ cwd = vim.uv.cwd() }) end, desc = 'Find files cwd' },
+      { '<leader>fg', function() snacks().picker.grep({ cwd = root() }) end, desc = 'Grep project' },
+      { '<leader>fG', function() snacks().picker.grep({ cwd = vim.uv.cwd() }) end, desc = 'Grep cwd' },
+      { '<leader>fb', function() snacks().picker.buffers() end, desc = 'Buffers' },
+      { '<leader>fr', function() snacks().picker.recent({ cwd = root() }) end, desc = 'Recent project files' },
+      { '<leader>fR', function() snacks().picker.recent() end, desc = 'Recent files' },
+      { '<leader>fh', function() snacks().picker.help() end, desc = 'Help' },
+      { '<leader>fk', function() snacks().picker.keymaps() end, desc = 'Keymaps' },
+      { '<leader>fc', function() snacks().picker.grep_word() end, mode = { 'n', 'x' }, desc = 'Find word' },
+      { '<leader>fp', function() snacks().picker.projects() end, desc = 'Projects' },
+      { '<leader>e', function() snacks().explorer({ cwd = root() }) end, desc = 'Explorer project' },
+      { '<leader>E', function() snacks().explorer({ cwd = vim.fn.expand('%:p:h') }) end, desc = 'Explorer file directory' },
+      { '<C-\\>', function() snacks().terminal(nil, { cwd = root() }) end, desc = 'Terminal' },
+      { '<leader>tt', function() snacks().terminal(nil, { cwd = root() }) end, desc = 'Terminal' },
+      { '<leader>gg', function() snacks().lazygit({ cwd = git_root() }) end, desc = 'LazyGit' },
+      { '<leader>gs', function() snacks().picker.git_status({ cwd = git_root() }) end, desc = 'Git status' },
+      { '<leader>gl', function() snacks().picker.git_log({ cwd = git_root() }) end, desc = 'Git log' },
+      { '<leader>gL', function() snacks().picker.git_log_file() end, desc = 'Git file log' },
+      { '<leader>gb', function() snacks().picker.git_branches({ cwd = git_root() }) end, desc = 'Git branches' },
+      { '<leader>go', function() snacks().gitbrowse() end, mode = { 'n', 'x' }, desc = 'Open Git URL' },
+      { '<leader>un', function() snacks().picker.notifications() end, desc = 'Notification history' },
+      { '<leader>uz', function() snacks().zen() end, desc = 'Zen mode' },
+      { '<leader>.', function() snacks().scratch() end, desc = 'Scratch buffer' },
+      { '<leader>S', function() snacks().scratch.select() end, desc = 'Scratch list' },
+    },
+    opts = {
+      bigfile = { enabled = true },
+      bufdelete = { enabled = true },
+      dashboard = dashboard(),
+      explorer = { enabled = true, replace_netrw = true },
+      gitbrowse = { enabled = true },
+      indent = { enabled = true, scope = { enabled = true } },
+      input = { enabled = true },
+      lazygit = { enabled = true },
+      notifier = { enabled = true, timeout = 3000 },
+      picker = {
+        enabled = true,
+        ui_select = true,
+        formatters = { file = { filename_first = true, truncate = 1 } },
+        win = {
+          input = {
+            keys = {
+              ['<C-j>'] = { 'list_down', mode = { 'i', 'n' } },
+              ['<C-k>'] = { 'list_up', mode = { 'i', 'n' } },
+              ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
+            },
+          },
+        },
+      },
+      quickfile = { enabled = true },
+      scratch = { enabled = true },
+      scope = { enabled = true },
+      statuscolumn = { enabled = true },
+      terminal = { enabled = true },
+      words = { enabled = true },
+      zen = { enabled = true },
+    },
+  },
+
   {
     'nvim-lualine/lualine.nvim',
-    cond = not_vscode,
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('lualine').setup({
-        options = {
-          theme = 'catppuccin',
-          component_separators = { left = '|', right = '|' },
-          section_separators = { left = '', right = '' },
-          globalstatus = true,
-        },
-        sections = {
-          lualine_a = { 'mode' },
-          lualine_b = { 'branch', 'diff', 'diagnostics' },
-          lualine_c = {
-            {
-              'filename',
-              path = 1, -- 0: just filename, 1: relative path, 2: absolute path
-              symbols = {
-                modified = ' ●',
-                readonly = ' ',
-                unnamed = '[No Name]',
-              },
-            },
-          },
-          lualine_x = {},
-          lualine_y = { 'progress' },
-          lualine_z = { 'location' },
-        },
-      })
-    end,
-  },
-
-  -- Bufferline
-  {
-    'akinsho/bufferline.nvim',
-    cond = not_vscode,
-    event = 'VeryLazy',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    keys = {
-      { '<leader>bp', '<cmd>BufferLineTogglePin<CR>', desc = 'Pin buffer' },
-      { '<leader>bP', '<cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Close unpinned buffers' },
-      { '[b', '<cmd>BufferLineCyclePrev<CR>', desc = 'Previous buffer' },
-      { ']b', '<cmd>BufferLineCycleNext<CR>', desc = 'Next buffer' },
-      -- Jump to buffer by ordinal number (matches numbers shown in bufferline)
-      { '<leader>1', '<cmd>BufferLineGoToBuffer 1<CR>', desc = 'Go to buffer 1' },
-      { '<leader>2', '<cmd>BufferLineGoToBuffer 2<CR>', desc = 'Go to buffer 2' },
-      { '<leader>3', '<cmd>BufferLineGoToBuffer 3<CR>', desc = 'Go to buffer 3' },
-      { '<leader>4', '<cmd>BufferLineGoToBuffer 4<CR>', desc = 'Go to buffer 4' },
-      { '<leader>5', '<cmd>BufferLineGoToBuffer 5<CR>', desc = 'Go to buffer 5' },
-      { '<leader>6', '<cmd>BufferLineGoToBuffer 6<CR>', desc = 'Go to buffer 6' },
-      { '<leader>7', '<cmd>BufferLineGoToBuffer 7<CR>', desc = 'Go to buffer 7' },
-      { '<leader>8', '<cmd>BufferLineGoToBuffer 8<CR>', desc = 'Go to buffer 8' },
-      { '<leader>9', '<cmd>BufferLineGoToBuffer 9<CR>', desc = 'Go to buffer 9' },
-    },
-    config = function()
-      local icons = require('ui.icons')
-
-      require('bufferline').setup({
-        options = {
-          mode = 'buffers',
-          numbers = 'ordinal', -- Show ordinal numbers for <leader>1-9 navigation
-          separator_style = 'thin',
-          always_show_bufferline = true,
-          show_buffer_close_icons = true,
-          show_close_icon = true,
-          color_icons = true,
-          diagnostics = 'nvim_lsp',
-          diagnostics_indicator = function(count, level)
-            local icon = icons.diagnostics.error
-            if level:match('warn') then
-              icon = icons.diagnostics.warn
-            elseif level:match('info') then
-              icon = icons.diagnostics.info
-            elseif level:match('hint') then
-              icon = icons.diagnostics.hint
-            end
-            return ' ' .. icon .. ' ' .. count
-          end,
-          modified_icon = icons.bufferline.modified,
-          close_icon = icons.bufferline.buffer_close,
-          left_trunc_marker = icons.ui.arrow_left,
-          right_trunc_marker = icons.ui.arrow_right,
-          offsets = {
-            {
-              filetype = 'NvimTree', -- nvim-tree filetype (was incorrectly 'neo-tree')
-              text = '  File Explorer',
-              highlight = 'Directory',
-              text_align = 'left',
-            },
-          },
-        },
-      })
-    end,
-  },
-
-  -- Indent guides
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    -- Only enable in true Neovim, not in VSCode's Neovim extension
-    cond = function()
-      return not vim.g.vscode
-    end,
-    event = { 'BufReadPost', 'BufNewFile' },
-    main = 'ibl',
     opts = {
-      indent = {
-        char = '│',
-        tab_char = '│',
+      options = {
+        theme = 'auto',
+        globalstatus = true,
+        component_separators = { left = '|', right = '|' },
+        section_separators = { left = '', right = '' },
       },
-      scope = { enabled = true },
-      exclude = {
-        filetypes = {
-          'help',
-          'alpha',
-          'dashboard',
-          'neo-tree',
-          'Trouble',
-          'lazy',
-          'mason',
-          'notify',
-          'toggleterm',
-          'lazyterm',
-        },
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { { 'filename', path = 1, symbols = { modified = ' ●', readonly = ' 󰌾' } } },
+        lualine_x = { 'encoding', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' },
       },
     },
   },
 
-  -- Better UI components
-  {
-    'stevearc/dressing.nvim',
-    cond = not_vscode,
-    event = 'VeryLazy',
-    opts = {
-      input = {
-        enabled = true,
-        default_prompt = '➤ ',
-        win_options = {
-          winblend = 0,
-        },
-      },
-      select = {
-        enabled = true,
-        backend = { 'telescope', 'builtin' },
-      },
-    },
-  },
-
-  -- Dashboard
-  {
-    'goolord/alpha-nvim',
-    cond = not_vscode,
-    event = 'VimEnter',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      local alpha = require('alpha')
-      local dashboard = require('alpha.themes.dashboard')
-      local icons = require('ui.icons')
-
-      dashboard.section.header.val = {
-        [[                                                    ]],
-        [[ ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗]],
-        [[ ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║]],
-        [[ ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║]],
-        [[ ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║]],
-        [[ ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║]],
-        [[ ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
-        [[                                                    ]],
-      }
-
-      dashboard.section.buttons.val = {
-        dashboard.button('f', icons.alpha.find_file .. 'Find file', ':Telescope find_files <CR>'),
-        dashboard.button('n', icons.alpha.new_file .. 'New file', ':ene <BAR> startinsert <CR>'),
-        dashboard.button('r', icons.alpha.recent_files .. 'Recent files', ':Telescope oldfiles <CR>'),
-        dashboard.button('g', icons.alpha.find_text .. 'Find text', ':Telescope live_grep <CR>'),
-        dashboard.button('c', icons.alpha.config .. 'Config', ':e $MYVIMRC <CR>'),
-        dashboard.button('l', icons.alpha.lazy .. 'Lazy', ':Lazy<CR>'),
-        dashboard.button('q', icons.alpha.quit .. 'Quit', ':qa<CR>'),
-      }
-
-      -- 设置各部分之间的间距
-      dashboard.section.header.opts.hl = 'AlphaHeader'
-      dashboard.section.buttons.opts.hl = 'AlphaButtons'
-
-      -- 计算居中位置
-      local header_padding = vim.fn.max({ 2, vim.fn.floor(vim.fn.winheight(0) * 0.25) })
-      dashboard.section.header.opts.position = 'center'
-      dashboard.section.buttons.opts.position = 'center'
-
-      -- 设置布局
-      dashboard.config.layout = {
-        { type = 'padding', val = header_padding },
-        dashboard.section.header,
-        { type = 'padding', val = 2 },
-        dashboard.section.buttons,
-        { type = 'padding', val = 1 },
-      }
-
-      -- 设置选项
-      dashboard.config.opts.noautocmd = true
-
-      alpha.setup(dashboard.config)
-    end,
-  },
-
-  -- Which-key (shows keybindings)
   {
     'folke/which-key.nvim',
-    cond = not_vscode,
     event = 'VeryLazy',
-    -- timeoutlen is set in core/options.lua, no need to repeat here
     opts = {
       preset = 'modern',
-      delay = 500, -- 500ms 后显示，避免瞬间弹出
-      plugins = {
-        spelling = {
-          enabled = true,
-          suggestions = 20,
-        },
-        presets = {
-          operators = false, -- 禁用操作符的 which-key（v, d, y 等）
-          motions = false, -- 禁用动作的 which-key
-          text_objects = false, -- 禁用文本对象的 which-key
-          windows = true, -- 保留窗口命令
-          nav = true, -- 保留导航
-          z = true, -- 保留 z 命令
-          g = true, -- 保留 g 命令
-        },
-      },
-      win = {
-        border = 'rounded',
-        padding = { 1, 2 },
-      },
-      triggers = {
-        { '<leader>', mode = { 'n', 'v' } }, -- 只监听 leader 键
-        { 'g', mode = { 'n', 'v' } },
-        { ']', mode = { 'n', 'v' } },
-        { '[', mode = { 'n', 'v' } },
-      },
+      delay = 350,
+      win = { border = 'rounded' },
       spec = {
-        { 'g', group = '+goto' },
-        { ']', group = '+next' },
-        { '[', group = '+prev' },
+        { '<leader>a', group = '+ai' },
         { '<leader>b', group = '+buffer' },
         { '<leader>c', group = '+code' },
-        { '<leader>d', group = '+diagnostics' },
+        { '<leader>d', group = '+debug/diagnostics' },
         { '<leader>f', group = '+find' },
         { '<leader>g', group = '+git' },
         { '<leader>h', group = '+hunk' },
-        { '<leader>q', group = '+session' },
-        { '<leader>s', group = '+split' },
-        { '<leader>t', group = '+terminal' },
-        { '<leader>u', group = '+ui' },
+        { '<leader>m', group = '+multi-cursor' },
+        { '<leader>q', group = '+quit/session' },
+        { '<leader>r', group = '+request' },
+        { '<leader>s', group = '+search' },
+        { '<leader>t', group = '+terminal/test' },
+        { '<leader>u', group = '+toggle' },
+        { '<leader>w', group = '+window' },
         { '<leader>x', group = '+trouble' },
       },
     },
   },
+
+  { 'nvim-tree/nvim-web-devicons', lazy = true },
 }

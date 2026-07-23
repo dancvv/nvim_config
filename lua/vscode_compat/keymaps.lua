@@ -1,137 +1,74 @@
--- ============================================================================
--- VSCode Neovim Keymaps
--- Only loaded when running inside VSCode (vim.g.vscode == true)
--- Uses vscode-neovim extension API to call VSCode commands
--- ============================================================================
+local map = vim.keymap.set
+local vscode = require('vscode')
 
-local keymap = vim.keymap.set
-local vscode = require("vscode")
-
--- Helper: call a VSCode command
-local function call(cmd)
-  return function() vscode.action(cmd) end
+local function call(command, opts)
+  return function()
+    vscode.action(command, opts)
+  end
 end
 
--- ============================================================================
--- LSP / Code Navigation → VSCode built-in
--- ============================================================================
+map('n', 'gd', call('editor.action.revealDefinition'), { desc = 'Go to definition' })
+map('n', 'gD', call('editor.action.revealDeclaration'), { desc = 'Go to declaration' })
+map('n', 'gi', call('editor.action.goToImplementation'), { desc = 'Go to implementation' })
+map('n', 'gr', call('editor.action.goToReferences'), { desc = 'Go to references' })
+map('n', 'gy', call('editor.action.goToTypeDefinition'), { desc = 'Go to type definition' })
+map('n', 'K', call('editor.action.showHover'), { desc = 'Hover documentation' })
+map({ 'n', 'x' }, '<leader>ca', call('editor.action.quickFix'), { desc = 'Code action' })
+map('n', '<leader>rn', call('editor.action.rename'), { desc = 'Rename symbol' })
+map({ 'n', 'x' }, '<leader>fm', call('editor.action.formatDocument'), { desc = 'Format document' })
+map('n', '[d', call('editor.action.marker.prevInFiles'), { desc = 'Previous diagnostic' })
+map('n', ']d', call('editor.action.marker.nextInFiles'), { desc = 'Next diagnostic' })
+map('n', '<leader>dl', call('workbench.actions.view.problems'), { desc = 'Problems' })
 
-keymap("n", "gd", call("editor.action.revealDefinition"),          { desc = "Go to definition" })
-keymap("n", "gD", call("editor.action.revealDeclaration"),         { desc = "Go to declaration" })
-keymap("n", "gi", call("editor.action.goToImplementation"),        { desc = "Go to implementation" })
-keymap("n", "gr", call("editor.action.goToReferences"),            { desc = "Go to references" })
-keymap("n", "gt", call("editor.action.goToTypeDefinition"),        { desc = "Go to type definition" })
-keymap("n", "K",  call("editor.action.showHover"),                 { desc = "Hover documentation" })
+map('n', '<leader><space>', call('workbench.action.quickOpen'), { desc = 'Quick open' })
+map('n', '<leader>ff', call('workbench.action.quickOpen'), { desc = 'Find files' })
+map('n', '<leader>fg', call('workbench.action.findInFiles'), { desc = 'Find in files' })
+map('n', '<leader>fb', call('workbench.action.showAllEditorsByMostRecentlyUsed'), { desc = 'Find editors' })
+map('n', '<leader>fr', call('workbench.action.openRecent'), { desc = 'Recent files' })
+map('n', '<leader>fh', call('workbench.action.showCommands'), { desc = 'Command palette' })
+map('n', '<leader>e', call('workbench.view.explorer'), { desc = 'Explorer' })
+map('n', '<leader>E', call('workbench.files.action.showActiveFileInExplorer'), { desc = 'Reveal file' })
 
--- Code actions & refactoring
-keymap({ "n", "v" }, "<leader>ca", call("editor.action.quickFix"),       { desc = "Code action" })
-keymap("n",          "<leader>rn", call("editor.action.rename"),          { desc = "Rename symbol" })
-keymap("n",          "<leader>fm", call("editor.action.formatDocument"),  { desc = "Format document" })
+map('n', ']b', call('workbench.action.nextEditor'), { desc = 'Next editor' })
+map('n', '[b', call('workbench.action.previousEditor'), { desc = 'Previous editor' })
+map('n', '<leader>bd', call('workbench.action.closeActiveEditor'), { desc = 'Close editor' })
+map('n', '<leader>bb', call('workbench.action.quickOpenPreviousRecentlyUsedEditor'), { desc = 'Previous editor' })
+map('n', 'H', '0', { desc = 'Start of line' })
+map('n', 'L', '$', { desc = 'End of line' })
 
--- Diagnostics
-keymap("n", "[d",        call("editor.action.marker.prevInFiles"), { desc = "Previous diagnostic" })
-keymap("n", "]d",        call("editor.action.marker.nextInFiles"), { desc = "Next diagnostic" })
-keymap("n", "<leader>dl", call("workbench.actions.view.problems"), { desc = "List diagnostics" })
-keymap("n", "<leader>df", call("editor.action.showHover"),         { desc = "Show diagnostic float" })
+map('n', '<C-h>', call('workbench.action.focusLeftGroup'), { desc = 'Focus left group' })
+map('n', '<C-j>', '5jzz', { desc = 'Down 5 lines' })
+map('n', '<C-k>', '5kzz', { desc = 'Up 5 lines' })
+map('n', '<C-l>', call('workbench.action.focusRightGroup'), { desc = 'Focus right group' })
+map('n', '<leader>wj', call('workbench.action.focusBelowGroup'), { desc = 'Focus lower group' })
+map('n', '<leader>wk', call('workbench.action.focusAboveGroup'), { desc = 'Focus upper group' })
+map('n', '<leader>wv', call('workbench.action.splitEditorRight'), { desc = 'Split right' })
+map('n', '<leader>wh', call('workbench.action.splitEditorDown'), { desc = 'Split down' })
+map('n', '<leader>wq', call('workbench.action.closeEditorsInGroup'), { desc = 'Close editor group' })
 
--- Signature help
-keymap("i", "<C-k>", call("editor.action.triggerParameterHints"), { desc = "Signature help" })
+map('n', '<C-\\>', call('workbench.action.terminal.toggleTerminal'), { desc = 'Terminal' })
+map('n', '<leader>tt', call('workbench.action.terminal.toggleTerminal'), { desc = 'Terminal' })
+map('n', '<leader>gg', call('workbench.view.scm'), { desc = 'Source control' })
+map('n', ']h', call('workbench.action.editor.nextChange'), { desc = 'Next change' })
+map('n', '[h', call('workbench.action.editor.previousChange'), { desc = 'Previous change' })
 
--- ============================================================================
--- File Search / Navigation → VSCode command palette
--- ============================================================================
+map('n', 'gcc', call('editor.action.commentLine'), { desc = 'Comment line' })
+map('x', 'gc', call('editor.action.commentLine'), { desc = 'Comment selection' })
+map({ 'n', 'x' }, '<C-/>', call('editor.action.commentLine'), { desc = 'Toggle comment' })
 
-keymap("n", "<leader>ff", call("workbench.action.quickOpen"),               { desc = "Find files" })
-keymap("n", "<leader>fg", call("workbench.action.findInFiles"),             { desc = "Live grep" })
-keymap("n", "<leader>fb", call("workbench.action.showAllEditorsByMostRecentlyUsed"), { desc = "Find buffers" })
-keymap("n", "<leader>fr", call("workbench.action.openRecent"),              { desc = "Recent files" })
-keymap("n", "<leader>fc", call("editor.action.addSelectionToNextFindMatch"),{ desc = "Find under cursor" })
-keymap("n", "<leader>fh", call("workbench.action.showCommands"),            { desc = "Command palette" })
-keymap("n", "<leader>fp", call("workbench.action.openRecent"),              { desc = "Find projects" })
+map({ 'n', 'x' }, '<C-n>', call('editor.action.addSelectionToNextFindMatch'), { desc = 'Add next match cursor' })
+map({ 'n', 'x' }, '<leader>mn', call('editor.action.addSelectionToNextFindMatch'), { desc = 'Add next match' })
+map({ 'n', 'x' }, '<leader>mN', call('editor.action.addSelectionToPreviousFindMatch'), { desc = 'Add previous match' })
+map({ 'n', 'x' }, '<leader>ma', call('editor.action.selectHighlights'), { desc = 'Select all matches' })
+map({ 'n', 'x' }, '<leader>ms', call('editor.action.moveSelectionToNextFindMatch'), { desc = 'Skip next match' })
+map({ 'n', 'x' }, '<leader>mj', call('editor.action.insertCursorBelow'), { desc = 'Add cursor below' })
+map({ 'n', 'x' }, '<leader>mk', call('editor.action.insertCursorAbove'), { desc = 'Add cursor above' })
+map({ 'n', 'x' }, '<C-Down>', call('editor.action.insertCursorBelow'), { desc = 'Add cursor below' })
 
--- ============================================================================
--- File Explorer
--- ============================================================================
+map('n', '<leader>aa', call('workbench.action.chat.open'), { desc = 'Open AI chat' })
+map('n', '<leader>aA', call('workbench.action.chat.openAgent'), { desc = 'Open AI agent' })
+map({ 'n', 'x' }, '<leader>ai', call('inlineChat.start'), { desc = 'Inline AI chat' })
 
-keymap("n", "<leader>e",  call("workbench.action.toggleSidebarVisibility"), { desc = "Toggle sidebar" })
-keymap("n", "<leader>o",  call("workbench.view.explorer"),                  { desc = "Focus explorer" })
-keymap("n", "<leader>nf", call("revealInExplorer"),                         { desc = "Reveal in explorer" })
-
--- ============================================================================
--- Git → VSCode Source Control
--- ============================================================================
-
-keymap("n", "<leader>gg", call("workbench.view.scm"),                          { desc = "Git SCM panel" })
-keymap("n", "<leader>gd", call("git.openChange"),                              { desc = "Git diff" })
-keymap("n", "<leader>gb", call("git.checkout"),                                { desc = "Git checkout branch" })
-keymap("n", "<leader>gh", call("git.viewFileHistory"),                         { desc = "Git file history" })
-keymap("n", "<leader>gs", call("workbench.view.scm"),                          { desc = "Git status" })
-keymap("n", "]h",         call("workbench.action.editor.nextChange"),          { desc = "Next hunk" })
-keymap("n", "[h",         call("workbench.action.editor.previousChange"),      { desc = "Previous hunk" })
-keymap("n", "<leader>hs", call("git.stageSelectedRanges"),                     { desc = "Stage hunk" })
-keymap("n", "<leader>hr", call("git.revertSelectedRanges"),                    { desc = "Reset hunk" })
-keymap("n", "<leader>hb", call("editor.action.showHover"),                     { desc = "Blame line" })
-
--- ============================================================================
--- Terminal → VSCode integrated terminal
--- ============================================================================
-
-keymap("n", "<C-\\>",       call("workbench.action.terminal.toggleTerminal"),  { desc = "Toggle terminal" })
-keymap("n", "<leader>th",   call("workbench.action.terminal.toggleTerminal"),  { desc = "Toggle terminal" })
-
--- ============================================================================
--- Buffer / Tab Navigation → VSCode editor tabs
--- ============================================================================
-
-keymap("n", "<S-l>",      call("workbench.action.nextEditor"),          { desc = "Next buffer" })
-keymap("n", "<S-h>",      call("workbench.action.previousEditor"),      { desc = "Previous buffer" })
-keymap("n", "<leader>bd", call("workbench.action.closeActiveEditor"),   { desc = "Close buffer" })
-keymap("n", "<leader>bp", call("workbench.action.pinEditor"),           { desc = "Pin editor" })
-
--- ============================================================================
--- Window / Split → VSCode editor groups
--- ============================================================================
-
-keymap("n", "<leader>sv", call("workbench.action.splitEditorRight"),    { desc = "Split vertical" })
-keymap("n", "<leader>sh", call("workbench.action.splitEditorDown"),     { desc = "Split horizontal" })
-keymap("n", "<leader>sx", call("workbench.action.closeEditorsInGroup"), { desc = "Close group" })
-keymap("n", "<C-h>",      call("workbench.action.focusLeftGroup"),      { desc = "Focus left group" })
-keymap("n", "<C-l>",      call("workbench.action.focusRightGroup"),     { desc = "Focus right group" })
-
--- ============================================================================
--- Problems / Diagnostics panel
--- ============================================================================
-
-keymap("n", "<leader>xx", call("workbench.actions.view.problems"),          { desc = "Problems panel" })
-keymap("n", "<leader>xX", call("workbench.actions.view.problems"),          { desc = "Workspace problems" })
-
--- ============================================================================
--- Comments → VSCode built-in (works in all languages)
--- ============================================================================
-
-keymap("n", "gcc",   call("editor.action.commentLine"),         { desc = "Comment line" })
-keymap("v", "gc",    call("editor.action.commentLine"),         { desc = "Comment selection" })
-keymap("n", "<C-/>", call("editor.action.commentLine"),         { desc = "Comment line" })
-keymap("v", "<C-/>", call("editor.action.commentLine"),         { desc = "Comment selection" })
-
--- ============================================================================
--- UI Extras
--- ============================================================================
-
--- Open settings
-keymap("n", "<leader>us", call("workbench.action.openSettings"),    { desc = "Open settings" })
--- Zen mode
-keymap("n", "<leader>uz", call("workbench.action.toggleZenMode"),   { desc = "Toggle zen mode" })
--- Fold / unfold
-keymap("n", "za", call("editor.toggleFold"),                        { desc = "Toggle fold" })
-keymap("n", "zM", call("editor.foldAll"),                           { desc = "Fold all" })
-keymap("n", "zR", call("editor.unfoldAll"),                         { desc = "Unfold all" })
-
--- ============================================================================
--- Line Navigation → must be LAST to override <S-h>/<S-l> above
--- H == <S-h>, L == <S-l> in Vim; later mapping wins
--- ============================================================================
-
-local vopts = { noremap = true, silent = true }
-keymap({ "n", "v" }, "H", "^", vopts)
-keymap({ "n", "v" }, "L", "$", vopts)
+map('n', 'za', call('editor.toggleFold'), { desc = 'Toggle fold' })
+map('n', 'zM', call('editor.foldAll'), { desc = 'Fold all' })
+map('n', 'zR', call('editor.unfoldAll'), { desc = 'Unfold all' })

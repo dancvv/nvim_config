@@ -251,6 +251,7 @@ return {
         mason = true,
         mini = true,
         native_lsp = { enabled = true },
+        noice = true,
         snacks = true,
         treesitter = true,
         which_key = true,
@@ -260,6 +261,138 @@ return {
       require('catppuccin').setup(opts)
       vim.cmd.colorscheme('catppuccin')
     end,
+  },
+
+  {
+    'folke/noice.nvim',
+    event = 'VeryLazy',
+    dependencies = { 'MunifTanjim/nui.nvim' },
+    opts = {
+      cmdline = {
+        enabled = true,
+        view = 'cmdline_popup',
+        format = {
+          cmdline = { pattern = '^:', icon = '', lang = 'vim', title = ' Command ' },
+          search_down = { kind = 'search', pattern = '^/', icon = ' ', lang = 'regex', title = ' Search ' },
+          search_up = { kind = 'search', pattern = '^%?', icon = ' ', lang = 'regex', title = ' Search ' },
+          filter = { pattern = '^:%s*!', icon = '$', lang = 'bash', title = ' Shell ' },
+          lua = {
+            pattern = { '^:%s*lua%s+', '^:%s*lua%s*=%s*', '^:%s*=%s*' },
+            icon = '',
+            lang = 'lua',
+            title = ' Lua ',
+          },
+          help = { pattern = '^:%s*he?l?p?%s+', icon = '󰋖', title = ' Help ' },
+          input = { view = 'cmdline_input', icon = '󰥻 ', title = ' Input ' },
+        },
+      },
+      messages = { enabled = false },
+      popupmenu = {
+        enabled = true,
+        backend = 'nui',
+      },
+      notify = { enabled = false },
+      lsp = {
+        progress = { enabled = false },
+        hover = { enabled = false },
+        signature = { enabled = false },
+        message = { enabled = false },
+      },
+      presets = {
+        bottom_search = false,
+        command_palette = true,
+        long_message_to_split = false,
+        inc_rename = false,
+        lsp_doc_border = true,
+      },
+      views = {
+        cmdline_popup = {
+          position = {
+            row = '40%',
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 'auto',
+          },
+          border = {
+            style = 'rounded',
+            padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = {
+              Normal = 'NormalFloat',
+              FloatBorder = 'FloatBorder',
+            },
+          },
+        },
+        popupmenu = {
+          relative = 'editor',
+          position = {
+            row = '50%',
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = 'rounded',
+            padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = {
+              Normal = 'NormalFloat',
+              FloatBorder = 'FloatBorder',
+            },
+          },
+        },
+      },
+    },
+  },
+
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      { '[t', '<cmd>tabprevious<cr>', desc = 'Previous tab' },
+      { ']t', '<cmd>tabnext<cr>', desc = 'Next tab' },
+      { '<leader><tab><tab>', '<cmd>tabnew<cr>', desc = 'New tab' },
+      { '<leader><tab>[', '<cmd>tabprevious<cr>', desc = 'Previous tab' },
+      { '<leader><tab>]', '<cmd>tabnext<cr>', desc = 'Next tab' },
+      { '<leader><tab>f', '<cmd>tabfirst<cr>', desc = 'First tab' },
+      { '<leader><tab>l', '<cmd>tablast<cr>', desc = 'Last tab' },
+      { '<leader><tab>s', '<cmd>tab split<cr>', desc = 'Open current buffer in new tab' },
+      {
+        '<leader><tab>d',
+        function()
+          if #vim.api.nvim_list_tabpages() > 1 then
+            vim.cmd.tabclose()
+          else
+            vim.notify('Cannot close the last tab', vim.log.levels.WARN)
+          end
+        end,
+        desc = 'Close tab',
+      },
+      { '<leader><tab>o', '<cmd>tabonly<cr>', desc = 'Close other tabs' },
+      { '<leader><tab>h', '<cmd>tabmove -1<cr>', desc = 'Move tab left' },
+      { '<leader><tab>L', '<cmd>tabmove +1<cr>', desc = 'Move tab right' },
+    },
+    opts = {
+      options = {
+        mode = 'tabs',
+        numbers = 'ordinal',
+        diagnostics = 'nvim_lsp',
+        always_show_bufferline = true,
+        show_buffer_icons = true,
+        show_buffer_close_icons = true,
+        show_close_icon = false,
+        separator_style = 'thin',
+        indicator = { style = 'underline' },
+      },
+    },
   },
 
   {
@@ -361,6 +494,7 @@ return {
       win = { border = 'rounded' },
       spec = {
         { '<leader>a', group = '+ai' },
+        { '<leader><tab>', group = '+tabs' },
         { '<leader>b', group = '+buffer' },
         { '<leader>c', group = '+code' },
         { '<leader>d', group = '+debug/diagnostics' },

@@ -357,32 +357,29 @@ return {
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     keys = {
-      { '[t', '<cmd>tabprevious<cr>', desc = 'Previous tab' },
-      { ']t', '<cmd>tabnext<cr>', desc = 'Next tab' },
-      { '<leader><tab><tab>', '<cmd>tabnew<cr>', desc = 'New tab' },
-      { '<leader><tab>[', '<cmd>tabprevious<cr>', desc = 'Previous tab' },
-      { '<leader><tab>]', '<cmd>tabnext<cr>', desc = 'Next tab' },
-      { '<leader><tab>f', '<cmd>tabfirst<cr>', desc = 'First tab' },
-      { '<leader><tab>l', '<cmd>tablast<cr>', desc = 'Last tab' },
-      { '<leader><tab>s', '<cmd>tab split<cr>', desc = 'Open current buffer in new tab' },
+      { '[t', '<cmd>BufferLineCyclePrev<cr>', desc = 'Previous file tab' },
+      { ']t', '<cmd>BufferLineCycleNext<cr>', desc = 'Next file tab' },
+      { '<leader><tab><tab>', '<cmd>enew<cr>', desc = 'New file tab' },
+      { '<leader><tab>[', '<cmd>BufferLineCyclePrev<cr>', desc = 'Previous file tab' },
+      { '<leader><tab>]', '<cmd>BufferLineCycleNext<cr>', desc = 'Next file tab' },
+      { '<leader><tab>f', '<cmd>BufferLinePick<cr>', desc = 'Pick file tab' },
+      { '<leader><tab>1', '<cmd>BufferLineGoToBuffer 1<cr>', desc = 'First file tab' },
+      { '<leader><tab>l', '<cmd>BufferLineGoToBuffer -1<cr>', desc = 'Last file tab' },
       {
         '<leader><tab>d',
         function()
-          if #vim.api.nvim_list_tabpages() > 1 then
-            vim.cmd.tabclose()
-          else
-            vim.notify('Cannot close the last tab', vim.log.levels.WARN)
-          end
+          snacks().bufdelete()
         end,
-        desc = 'Close tab',
+        desc = 'Close file tab',
       },
-      { '<leader><tab>o', '<cmd>tabonly<cr>', desc = 'Close other tabs' },
-      { '<leader><tab>h', '<cmd>tabmove -1<cr>', desc = 'Move tab left' },
-      { '<leader><tab>L', '<cmd>tabmove +1<cr>', desc = 'Move tab right' },
+      { '<leader><tab>o', '<cmd>BufferLineCloseOthers<cr>', desc = 'Close other file tabs' },
+      { '<leader><tab>h', '<cmd>BufferLineMovePrev<cr>', desc = 'Move file tab left' },
+      { '<leader><tab>L', '<cmd>BufferLineMoveNext<cr>', desc = 'Move file tab right' },
+      { '<leader><tab>p', '<cmd>BufferLineTogglePin<cr>', desc = 'Pin file tab' },
     },
     opts = {
       options = {
-        mode = 'tabs',
+        mode = 'buffers',
         numbers = 'ordinal',
         diagnostics = 'nvim_lsp',
         always_show_bufferline = true,

@@ -24,7 +24,7 @@
 
 | 领域 | 主要能力 |
 | --- | --- |
-| 导航 | Snacks Picker / Explorer、Oil、Flash、项目根目录识别 |
+| 导航 | 文件标签栏、Snacks Picker / Explorer、Oil、Flash、项目根目录识别 |
 | 编辑 | Treesitter、自动配对、包围操作、多光标、跨项目搜索替换 |
 | 代码智能 | Neovim 原生 LSP、blink.cmp、snippet、inlay hints、inline completion |
 | 质量 | Conform 保存时格式化、nvim-lint、Trouble 诊断列表 |
@@ -108,6 +108,8 @@ nvim
 | `<leader><space>` | 项目智能搜索 |
 | `<leader>ff` / `<leader>fg` | 查找文件 / 全文搜索 |
 | `<leader>e` | 项目文件浏览器 |
+| `[t` / `]t` | 上一个 / 下一个文件标签 |
+| `<leader><tab><tab>` / `<leader><tab>d` | 新建 / 关闭文件标签 |
 | `<C-\>` | 打开项目终端 |
 | `gd` / `gr` / `K` | 定义 / 引用 / 悬停文档 |
 | `<leader>ca` / `<leader>rn` | Code Action / 重命名 |

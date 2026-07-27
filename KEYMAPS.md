@@ -17,6 +17,11 @@
 | `<leader>wj` / `<leader>wk` | 切换下 / 上窗口 |
 | `<leader>wv` / `<leader>wh` | 垂直 / 水平分屏 |
 | `<leader>wq` / `<leader>wo` | 关闭窗口 / 仅保留当前窗口 |
+| `[t` / `]t` | 上一个 / 下一个文件标签 |
+| `<leader><tab><tab>` / `<leader><tab>d` | 新建 / 关闭文件标签 |
+| `<leader><tab>f` / `<leader><tab>p` | 选择 / 固定文件标签 |
+| `<leader><tab>h` / `<leader><tab>L` | 向左 / 向右移动文件标签 |
+| `<leader><tab>o` | 关闭其他文件标签 |
 | `[b` / `]b` | 上一个 / 下一个 buffer |
 | `<leader>bb` / `<leader>bn` / `<leader>bd` | 上一个 / 新建 / 删除 buffer |
 | `<A-j>` / `<A-k>` | 向下 / 向上移动行或选区 |

@@ -10,7 +10,7 @@ local function git_root()
   return require('config.root').git()
 end
 
-local function warp_image(image, width, height, indent)
+local function warp_image(image, width, height)
   local image_id = (vim.fn.getpid() % 65535) * 256 + 71
   local placement_id = image_id + 1
   local sent = false
@@ -35,21 +35,27 @@ local function warp_image(image, width, height, indent)
         or not dashboard
         or not last_pos
         or not vim.api.nvim_win_is_valid(dashboard.win)
-        or vim.api.nvim_get_current_win() ~= dashboard.win
       then
         return
       end
+      if vim.api.nvim_win_get_tabpage(dashboard.win) ~= vim.api.nvim_get_current_tabpage() then
+        delete_placement()
+        return
+      end
       local win_pos = vim.fn.win_screenpos(dashboard.win)
+      local win_width = vim.api.nvim_win_get_width(dashboard.win)
+      local placed_width = math.min(width, math.max(1, win_width - 4))
+      local placed_height = math.max(1, math.floor((placed_width * height / width) + 0.5))
       local row = win_pos[1] + last_pos[1] - 1
-      local col = win_pos[2] + last_pos[2] + indent + 1
+      local col = win_pos[2] + math.max(0, math.floor((win_width - placed_width) / 2))
       delete_placement()
       send(('\27[%d;%dH'):format(row, col))
       send(
         ('\27_Ga=p,i=%d,p=%d,C=1,c=%d,r=%d,q=2\27\\'):format(
           image_id,
           placement_id,
-          width,
-          height
+          placed_width,
+          placed_height
         )
       )
     end)
@@ -68,15 +74,13 @@ local function warp_image(image, width, height, indent)
             vim.base64.encode(vim.fn.fnamemodify(image, ':p'))
           )
         )
-        vim.api.nvim_create_autocmd('WinLeave', {
+        vim.api.nvim_create_autocmd({ 'WinEnter', 'WinResized', 'VimResized', 'TabEnter' }, {
           group = self.augroup,
-          buffer = self.buf,
-          callback = delete_placement,
-        })
-        vim.api.nvim_create_autocmd('WinEnter', {
-          group = self.augroup,
-          buffer = self.buf,
           callback = place,
+        })
+        vim.api.nvim_create_autocmd('TabLeave', {
+          group = self.augroup,
+          callback = delete_placement,
         })
         self.on('Closed', function()
           delete_placement()
@@ -99,14 +103,14 @@ local function dashboard()
     and not vim.env.TMUX
     and vim.api.nvim_ui_send ~= nil
   local has_chafa_image = readable_image and vim.fn.executable('chafa') == 1
-  local image_width = 22
-  local image_height = 20
-  local image_indent = 19
+  local image_width = 60
+  local image_height = 17
+  local image_indent = 0
 
   local sections = {}
   local hide_image = function() end
   if has_warp_image then
-    sections[#sections + 1], hide_image = warp_image(image, image_width, image_height, image_indent)
+    sections[#sections + 1], hide_image = warp_image(image, image_width, image_height)
   elseif has_chafa_image then
     sections[#sections + 1] = {
       section = 'terminal',
@@ -146,14 +150,14 @@ local function dashboard()
   sections[#sections + 1] = {
     {
       text = {
-        { '欢迎回来', hl = 'SnacksDashboardTitle' },
+        { 'WELCOME BACK', hl = 'SnacksDashboardTitle' },
       },
       align = 'center',
       padding = { 1, 1 },
     },
     {
       text = {
-        { '从一件小事开始，保持心流。', hl = 'Comment' },
+        { 'Start small. Stay in flow.', hl = 'Comment' },
       },
       align = 'center',
       padding = 1,
@@ -161,7 +165,7 @@ local function dashboard()
     { section = 'keys', padding = 1 },
     {
       icon = ' ',
-      title = '最近打开',
+      title = 'Recent Files',
       section = 'recent_files',
       limit = 3,
       indent = 2,
@@ -179,37 +183,37 @@ local function dashboard()
         {
           icon = ' ',
           key = 'f',
-          desc = '查找文件',
+          desc = 'Find Files',
           action = dashboard_action(function() Snacks.dashboard.pick('files') end),
         },
         {
           icon = ' ',
           key = 'g',
-          desc = '全局搜索',
+          desc = 'Global Search',
           action = dashboard_action(function() Snacks.dashboard.pick('live_grep') end),
         },
         {
           icon = ' ',
           key = 'r',
-          desc = '最近打开',
+          desc = 'Recent Files',
           action = dashboard_action(function() Snacks.dashboard.pick('oldfiles') end),
         },
         {
           icon = ' ',
           key = 'n',
-          desc = '新建文件',
+          desc = 'New File',
           action = dashboard_action(function() vim.cmd('ene | startinsert') end),
         },
         {
           icon = '󰙅 ',
           key = 'e',
-          desc = '文件浏览',
+          desc = 'File Explorer',
           action = dashboard_action(function() Snacks.explorer() end),
         },
         {
           icon = ' ',
           key = 'c',
-          desc = '编辑配置',
+          desc = 'Edit Config',
           action = dashboard_action(function()
             Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })
           end),
@@ -217,13 +221,13 @@ local function dashboard()
         {
           icon = '󰒲 ',
           key = 'l',
-          desc = '插件管理',
+          desc = 'Plugin Manager',
           action = dashboard_action(function() vim.cmd.Lazy() end),
         },
         {
           icon = ' ',
           key = 'q',
-          desc = '退出',
+          desc = 'Quit',
           action = dashboard_action(function() vim.cmd.qa() end),
         },
       },
